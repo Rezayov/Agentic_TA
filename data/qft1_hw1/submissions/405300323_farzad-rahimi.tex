@@ -1,0 +1,625 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage{bm}
+
+\title{Exercise 1 -- QFT1}
+\author{Farzad Rahimi - 405300323}
+\date{October 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Lattice Propagator}
+
+Consider a four-dimensional lattice with spacing $\Delta$.
+
+\[
+x=\Delta n,
+\qquad
+\text{lattice point}.
+\]
+
+From every lattice point there are $8$ possible links:
+
+\[
+\pm e_1,\quad
+\pm e_2,\quad
+\pm e_3,\quad
+\pm e_4.
+\]
+
+The propagator is
+
+\[
+G(x)
+=
+\sum_{0\to x}
+e^{-m_0 L(\text{path})},
+\]
+
+where
+
+\[
+L(\text{path})
+=
+\text{number of links in the path}.
+\]
+
+\[
+\boxed{
+\text{Directions are discrete: 8 possible directions.}
+}
+\]
+
+Define $N_L(x)$ as the number of lattice paths from $0$ to $x$
+with exactly $L$ links. Then
+
+\[
+G(x)
+=
+\sum_{L=0}^{\infty}
+e^{-m_0L}N_L(x).
+\]
+
+The endpoint after $L$ links is
+
+\[
+x
+=
+\Delta\sum_{k=1}^{L}\nu_k,
+\]
+
+where
+
+\[
+\nu_k\in
+\{
++e_1,-e_1,
++e_2,-e_2,
++e_3,-e_3,
++e_4,-e_4
+\},
+\]
+
+and therefore
+
+\[
+n=\sum_{k=1}^{L}\nu_k.
+\]
+
+We need to count the sequences
+
+\[
+\{\nu_1,\ldots,\nu_L\}
+\]
+
+whose sum is $n$.
+
+Thus,
+
+\[
+N_L(n)
+=
+\sum_{\{\nu_1,\ldots,\nu_L\}}
+\delta^{(4)}
+\left(
+\sum_{k=1}^{L}\nu_k-n
+\right).
+\]
+
+In $4$-dimensions,
+
+\[
+\delta^{(4)}_{n,0}
+=
+\int_{[-\pi,\pi]^4}
+\frac{d^4k}{(2\pi)^4}
+e^{ik\cdot n}.
+\]
+
+Therefore,
+
+\[
+N_L(n)
+=
+\int_{[-\pi,\pi]^4}
+\frac{d^4k}{(2\pi)^4}
+e^{-ik\cdot n}
+\sum_{\{\nu_1,\ldots,\nu_L\}}
+e^{ik\cdot(\nu_1+\cdots+\nu_L)}.
+\]
+
+The steps are independent, so
+
+\[
+\sum_{\{\nu_1,\ldots,\nu_L\}}
+e^{ik\cdot(\nu_1+\cdots+\nu_L)}
+=
+\left[
+\sum_{\nu}e^{ik\cdot\nu}
+\right]^L.
+\]
+
+Hence,
+
+\[
+N_L(n)
+=
+\int_{[-\pi,\pi]^4}
+\frac{d^4k}{(2\pi)^4}
+e^{-ik\cdot n}
+\left[
+\sum_{\nu}e^{ik\cdot\nu}
+\right]^L.
+\]
+
+Similar to Chapter 6, let us call
+
+\[
+I(k)
+=
+\sum_{\nu}e^{ik\cdot\nu},
+\]
+
+where each
+
+\[
+\nu=\pm e_\mu,
+\qquad
+\mu=1,2,3,4.
+\]
+
+Then
+
+\[
+I(k)
+=
+\sum_{\mu=1}^{4}
+\left(
+e^{ik_\mu}+e^{-ik_\mu}
+\right)
+=
+2\sum_{\mu=1}^{4}\cos k_\mu.
+\]
+
+Thus, the propagator is
+
+\[
+G(n)
+=
+\sum_{L=0}^{\infty}
+e^{-m_0L}
+\int_{[-\pi,\pi]^4}
+\frac{d^4k}{(2\pi)^4}
+e^{-ik\cdot n}
+\left[
+2\sum_{\mu=1}^{4}\cos k_\mu
+\right]^L.
+\]
+
+Equivalently,
+
+\[
+G(n)
+=
+\int_{[-\pi,\pi]^4}
+\frac{d^4k}{(2\pi)^4}
+e^{-ik\cdot n}
+\sum_{L=0}^{\infty}
+\left[
+2e^{-m_0}
+\sum_{\mu=1}^{4}\cos k_\mu
+\right]^L.
+\]
+
+For $m_0>\log 8$, the geometric series converges since
+
+\[
+\left|
+2e^{-m_0}
+\sum_{\mu=1}^{4}\cos k_\mu
+\right|
+\leq
+8e^{-m_0}
+<1.
+\]
+
+Using the relation
+
+\[
+\sum_{L=0}^{\infty}r^L
+=
+\frac{1}{1-r},
+\qquad |r|<1,
+\]
+
+the propagator becomes
+
+\[
+\boxed{
+G(n)
+=
+\int_{[-\pi,\pi]^4}
+\frac{d^4k}{(2\pi)^4}
+e^{-ik\cdot n}
+\frac{1}{
+1-
+2e^{-m_0}
+\displaystyle\sum_{\mu=1}^{4}\cos k_\mu
+}.
+}
+\]
+
+\section*{The Continuum Limit}
+
+The continuum limit is
+
+\[
+\Delta\rightarrow 0.
+\]
+
+Let
+
+\[
+\begin{cases}
+P: \text{physical momentum},\\[4pt]
+k: \text{dimensionless lattice momentum},
+\end{cases}
+\qquad
+k_\mu=\Delta P_\mu.
+\]
+
+We have
+
+\[
+I(P\Delta)
+=
+2\sum_{\mu=1}^{4}
+\cos(P_\mu\Delta),
+\]
+
+and
+
+\[
+\cos(P_\mu\Delta)
+=
+1-\frac12P_\mu^2\Delta^2
++
+O(\Delta^4).
+\]
+
+Using the cosine expansion and the fact that
+
+\[
+2\sum_{\mu=1}^{4}1=8,
+\]
+
+we have
+
+\[
+I(P\Delta)
+=
+8-P^2\Delta^2+O(\Delta^4),
+\]
+
+where
+
+\[
+P^2
+=
+\sum_{\mu=1}^{4}P_\mu^2.
+\]
+
+Or we can write
+
+\[
+I(P\Delta)
+=
+8
+\left[
+1-\frac18P^2\Delta^2
++
+O(\Delta^4)
+\right].
+\]
+
+Now for $L$ links,
+
+\[
+I(P\Delta)^L
+=
+8^L
+\left[
+1-\frac18P^2\Delta^2
++
+O(\Delta^4)
+\right]^L.
+\]
+
+Therefore,
+
+\[
+\boxed{
+I(P\Delta)^L
+\sim
+8^L
+e^{-\frac18L\Delta^2P^2}.
+}
+\]
+
+The relevant continuum combination is
+
+\[
+L\Delta^2
+\]
+
+and not $L\Delta$.
+
+Indeed, the factor
+
+\[
+e^{-\frac18L\Delta^2P^2}
+\]
+
+has a nontrivial finite limit only when
+
+\[
+\boxed{
+L\Delta^2=\text{finite}.
+}
+\]
+
+Each $L$-link path contributes with the weight
+
+\[
+e^{-m_0L}.
+\]
+
+Therefore,
+
+\[
+e^{-m_0L}I(P\Delta)^L
+\sim
+e^{-m_0L}
+8^L
+e^{-\frac18L\Delta^2P^2}.
+\]
+
+The first two factors can be combined as
+
+\[
+8^Le^{-m_0L}
+=
+e^{-L(m_0-\log8)}.
+\]
+
+Thus,
+
+\[
+e^{-m_0L}I(P\Delta)^L
+\sim
+\exp\left[
+-L(m_0-\log 8)
+-\frac18L\Delta^2P^2
+\right].
+\]
+
+The relevant random-walk scaling is
+
+\[
+L\Delta^2=\text{finite}.
+\]
+
+The momentum-dependent factor is
+
+\[
+e^{-\frac18L\Delta^2P^2}.
+\]
+
+Define
+
+\[
+s
+\coloneqq
+\frac18L\Delta^2
+\qquad\Longrightarrow\qquad
+L
+=
+\frac{8s}{\Delta^2}.
+\]
+
+Thus,
+
+\[
+L\rightarrow\infty
+\qquad
+\text{as}
+\qquad
+\Delta\rightarrow0.
+\]
+
+But these paths must contribute a finite amount:
+
+\[
+e^{-L(m_0-\log8)}
+\]
+
+must have a finite limit.
+
+Since
+
+\[
+L\sim\frac{1}{\Delta^2},
+\]
+
+we require
+
+\[
+m_0-\log8
+=
+O(\Delta^2).
+\]
+
+We want the continuum momentum-space propagator to have the denominator
+
+\[
+P^2+m^2.
+\]
+
+So we choose
+
+\[
+m_0(\Delta)-\log8
+=
+\frac18m^2\Delta^2
++
+O(\Delta^4).
+\]
+
+Equivalently,
+
+\[
+\boxed{
+m_0(\Delta)
+=
+\log8
++
+\frac18m^2\Delta^2
++
+O(\Delta^4).
+}
+\]
+
+With this choice,
+
+\[
+-L(m_0-\log8)
+\longrightarrow
+-m^2s,
+\]
+
+and
+
+\[
+-\frac18L\Delta^2P^2
+\longrightarrow
+-sP^2.
+\]
+
+Therefore,
+
+\[
+\boxed{
+e^{-m_0L}I(P\Delta)^L
+\longrightarrow
+e^{-s(m^2+P^2)}.
+}
+\]
+
+This is the desired factor.
+
+\section*{Critical Value}
+
+The denominator of the propagator at $k=0$ is
+
+\[
+1-
+2e^{-m_0}
+\sum_{\mu=1}^{4}\cos(0).
+\]
+
+Since
+
+\[
+\cos(0)=1,
+\]
+
+we obtain
+
+\[
+1-8e^{-m_0}.
+\]
+
+The denominator is zero when
+
+\[
+1-8e^{-m_0}=0,
+\]
+
+which gives
+
+\[
+m_0=\log8.
+\]
+
+Thus the critical value is
+
+\[
+\boxed{
+m_{0,c}=\log8.
+}
+\]
+
+This critical value can also be understood directly from the competition between the number of lattice paths and the weight of each path:
+
+\[
+8^Le^{-m_0L}
+=
+e^{-L(m_0-\log8)}.
+\]
+
+Therefore,
+
+\[
+\begin{cases}
+m_0>\log8,
+&
+\text{long paths are exponentially suppressed},\\[6pt]
+m_0=\log8,
+&
+\text{the path entropy and mass suppression balance},\\[6pt]
+m_0<\log8,
+&
+\text{the number of paths overwhelms the suppression}.
+\end{cases}
+\]
+
+Thus, in the continuum limit, the bare mass must approach the critical value according to
+
+\[
+m_0(\Delta)
+=
+\log8
++
+\frac18m^2\Delta^2
++
+O(\Delta^4).
+\]
+
+\newpage
+
+\subsection{AI use declaration}
+\
+
+\textbf{1. Model used:} ChatGPT (free) \\
+
+\textbf{2. Revisitions/corrections made to the model output, and clarifications:}
+I gave the model the problem and the approach needed to solve it. It gave answers mostly based on the reference notes. At some points, I have emphasized that it stays focused on the problem at hand and combine different approaches.\\
+
+\textbf{3. Comparison/checks against the lecture notes:}
+It compared the solution of this problem to that of Chapter 6 (path integral for a relativistic particle). \\
+
+\textbf{4. Calculation steps, limiting cases, or consistency checks verified by hand:} All of the calculations here are verified by hand. I did them myself, and in the end, I asked it to convert my handwritten file to LaTeX code.\\
+
+\textbf{5. Calculation steps, limiting cases, or consistency checks subjected to automated verification (via Mathematica, Python, LLMs):}
+None.
+
+
+
+\end{document}

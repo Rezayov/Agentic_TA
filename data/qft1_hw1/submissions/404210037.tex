@@ -1,0 +1,166 @@
+
+\documentclass[11pt]{article}
+\title{HW1, Ghafouralhosseini}
+\author{سیده فاطمه غفورالحسینی}
+\date{October 2026}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+
+\newcommand{\dd}{\mathrm{d}}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Lattice propagator and the continuum limit}
+\end{center}
+Fatemeh Ghafouralhosseini, 404210037
+\section*{Setup}
+
+Consider the hypercubic lattice $\Delta\mathbb{Z}^4$ with points $x=\Delta n$, $n\in\mathbb{Z}^4$.
+A path from $0$ to $x$ is a sequence of $N$ steps $\nu_1,\dots,\nu_N$, each
+$\nu_j\in\{\pm e_\mu\}_{\mu=1}^4$ (8 choices), with $\sum_j\nu_j=n$. Here $L(\text{path})=N$ is the
+number of links, and revisiting links is allowed. Define
+\begin{equation}
+G(n)=\sum_{\text{paths }0\to x}e^{-m_0L(\text{path})}
+=\sum_{N=0}^{\infty}e^{-m_0N}\,W_N(n),
+\end{equation}
+where $W_N(n)$ is the number of $N$-step walks from $0$ to $n$.
+
+\section*{1. Counting paths with the Kronecker delta}
+
+Use $\delta_{n,0}=\int_{-\pi}^{\pi}\frac{\dd k}{2\pi}e^{ikn}$ in each of the four directions to impose
+the constraint $\sum_j\nu_j=n$:
+\begin{equation}
+W_N(n)=\sum_{\nu_1,\dots,\nu_N}\delta^{(4)}_{\sum_j\nu_j,\,n}
+=\int_{[-\pi,\pi]^4}\frac{\dd^4k}{(2\pi)^4}\,e^{-ik\cdot n}
+\prod_{j=1}^{N}\Big(\sum_{\nu_j}e^{ik\cdot\nu_j}\Big).
+\end{equation}
+Each factor is a sum over the 8 steps,
+\begin{equation}
+\sum_{\nu}e^{ik\cdot\nu}=\sum_{\mu=1}^{4}\big(e^{ik_\mu}+e^{-ik_\mu}\big)=2\sum_{\mu=1}^{4}\cos k_\mu ,
+\end{equation}
+so
+\begin{equation}
+W_N(n)=\int_{[-\pi,\pi]^4}\frac{\dd^4k}{(2\pi)^4}\,e^{-ik\cdot n}\Big(2\sum_{\mu=1}^4\cos k_\mu\Big)^{N}.
+\end{equation}
+(The integrand is symmetric under $k\to-k$, so the sign in the exponent is immaterial.)
+
+\section*{2. Summing over $N$}
+
+Summing the geometric series,
+\begin{equation}
+G(n)=\int_{[-\pi,\pi]^4}\frac{\dd^4k}{(2\pi)^4}\,
+\frac{e^{ik\cdot n}}{1-2e^{-m_0}\sum_{\mu}\cos k_\mu}.
+\label{eq:G}
+\end{equation}
+Since $\big|2\sum_\mu\cos k_\mu\big|\le 8$, the series converges for $8e^{-m_0}<1$, i.e.
+$m_0>\ln 8$.
+
+\paragraph{Behaviour at fixed $m_0$.}
+\begin{itemize}
+\item \textbf{$m_0<\ln 8$.} The number of walks grows like $8^N$ (e.g.\ $W_N(0)\sim 8^N N^{-2}$ for even $N$),
+which beats $e^{-m_0N}$. The sum over $N$ diverges.
+\item \textbf{$m_0>\ln 8$.} Every additional step is suppressed by a factor at most
+$8e^{-m_0}<1$. The sum is dominated by the shortest paths, with $N_{\min}=\sum_\mu|n_\mu|=|x|_1/\Delta$, and
+$G(n)$ decays exponentially, $G\sim e^{-\mu_{\rm lat}|n|}$ with $\mu_{\rm lat}>0$ fixed. As $\Delta\to0$ at fixed
+$x$ we have $|n|\sim|x|/\Delta\to\infty$, so $G\to0$. In physical units the correlation length is
+$\Delta/\mu_{\rm lat}\to0$.
+\end{itemize}
+For long paths to remain relevant, $m_0$ must approach the critical value $\ln 8$ as $\Delta\to0$,
+so that the energy cost $m_0$ per link nearly cancels the entropy $\ln 8$ per link.
+
+\section*{3. Tuning $m_0(\Delta)$}
+
+Parametrize the distance to the critical value by a finite parameter $M$ (to be the physical mass):
+\begin{equation}
+e^{m_0}=8+M^2\Delta^2 .
+\label{eq:tune}
+\end{equation}
+Using $8-2\sum_\mu\cos k_\mu=2\sum_\mu(1-\cos k_\mu)=4\sum_\mu\sin^2(k_\mu/2)$, the denominator in
+\eqref{eq:G} is
+\begin{equation}
+1-2e^{-m_0}\sum_\mu\cos k_\mu
+=e^{-m_0}\Big(M^2\Delta^2+4\sum_{\mu}\sin^2\tfrac{k_\mu}{2}\Big),
+\end{equation}
+so that, exactly,
+\begin{equation}
+G(n)=e^{m_0}\int_{[-\pi,\pi]^4}\frac{\dd^4k}{(2\pi)^4}\,
+\frac{e^{ik\cdot n}}{M^2\Delta^2+4\sum_\mu\sin^2(k_\mu/2)} .
+\end{equation}
+This is the lattice Green's function of $-\nabla^2_{\rm lat}+M^2\Delta^2$.
+
+Now rescale $k=\Delta p$, so that $e^{ik\cdot n}=e^{ip\cdot x}$, $\dd^4k=\Delta^4\dd^4p$ and
+$p\in[-\pi/\Delta,\pi/\Delta]^4$:
+\begin{equation}
+G=e^{m_0}\Delta^{2}\int_{[-\pi/\Delta,\pi/\Delta]^4}\frac{\dd^4p}{(2\pi)^4}\,
+\frac{e^{ip\cdot x}}{M^2+\hat p^{\,2}},\qquad
+\hat p^{\,2}=\frac{4}{\Delta^2}\sum_\mu\sin^2\frac{\Delta p_\mu}{2}.
+\end{equation}
+For fixed $p$, $\hat p^{\,2}=p^2+O(\Delta^2p^4)$, and the Brillouin-zone boundary moves to infinity.
+For $x\neq0$ the region $|p|\sim1/\Delta$ contributes negligibly because of rapid oscillations of
+$e^{ip\cdot x}$. Since $e^{m_0}\to8$,
+\begin{equation}
+\boxed{\;G(n)\;\xrightarrow[\Delta\to0]{}\;8\Delta^2\,D_E(x;M),\qquad
+D_E(x;M)=\int\frac{\dd^4p}{(2\pi)^4}\frac{e^{ip\cdot x}}{p^2+M^2}\;}
+\end{equation}
+which is the Euclidean Klein--Gordon correlation function. The factor $8\Delta^2$ is an overall
+constant independent of $x$; it can be absorbed into the normalization of the (lattice) measure.
+
+\section*{4. Result and interpretation}
+
+Solving $e^{m_0}=8+M^2\Delta^2$ for $m_0$,
+\begin{equation}
+\boxed{\;m_0(\Delta)=\ln\!\big(8+M^2\Delta^2\big)=\ln 8+\frac{M^2\Delta^2}{8}+O(\Delta^4)\;}
+\end{equation}
+with $M$ held fixed as $\Delta\to0$. If instead $L$ is measured in physical length, $L=\Delta N$,
+then $m_0\to m_0\Delta$ in the weight, i.e.\ $m_0=\frac{\ln 8}{\Delta}+\frac{M^2\Delta}{8}+\dots$
+
+\paragraph{Proper-time check.}
+Near $k=0$, $2e^{-m_0}\sum_\mu\cos k_\mu\simeq\big(1-\tfrac{M^2\Delta^2}{8}\big)\big(1-\tfrac{k^2}{8}\big)
+\simeq \exp\!\big[-\tfrac{\Delta^2}{8}(p^2+M^2)\big]$. Hence the $N$-step contribution is weighted by
+$e^{-s(p^2+M^2)}$ with proper time
+\begin{equation}
+s=\frac{N\Delta^2}{8},\qquad\text{i.e. } \xi=\tfrac18 ,
+\end{equation}
+and replacing $\sum_N\to\frac{8}{\Delta^2}\int_0^\infty\dd s$ gives
+\begin{equation}
+G\to 8\Delta^2\int_0^\infty\dd s\,e^{-sM^2}\int\frac{\dd^4p}{(2\pi)^4}e^{-sp^2+ip\cdot x}=8\Delta^2D_E(x;M),
+\end{equation}
+which is the Schwinger proper-time representation. This agrees with the result above and with the
+tuning $\Delta m_0-\log A\to\xi m^2\Delta^2$ of Lecture~7 (the lattice analogue of $\log A$ is $\ln 8$).
+
+Keeping $s$ finite requires $N\sim 8s/\Delta^2\to\infty$. The continuum limit is therefore not obtained
+at fixed physical path length $N\Delta$: the dominant paths have infinitely many microscopic links
+($N\sim 1/(M^2\Delta^2)$). They are very long, crumpled, Brownian-like paths (fractal dimension 2),
+with typical extent $x^2_{\rm typ}\sim N\Delta^2\sim s$, and not the shortest path.
+
+\subsection*{AI use declaration}
+
+Model(s) used: Claude Sonnet 5.5 (Anthropic) and ChatGPT Luna 5.6 (OpenAI).\\
+
+Revisions/corrections made to model output, and clarifications added:
+The suggestions of the second model were incorporated: the wording about the overall factor
+$8\Delta^2$ was made less assertive (it is an overall normalization constant, independent of $x$),
+and the statement about the typical extent of the paths was changed to
+$x^2_{\rm typ}\sim N\Delta^2\sim s$. In addition, I edited the \LaTeX{} source by hand and made some other small changes.\\
+
+Comparisons/checks against the lecture notes:
+The result was compared with the notes (the section on the path integral for a relativistic particle,
+Lecture~7). The $\ln 8$ term (logarithm of the number of directions) plays the role of $\log A$,
+the correction $M^2\Delta^2/8$ corresponds to $\xi m^2\Delta^2$ with $\xi=1/8$, and the continuum
+limit reproduces the Schwinger proper-time representation of $D_E(x)$.\\
+
+Calculation steps, limiting cases, or consistency checks verified by hand:
+I checked by hand the following steps: the convergence condition $8e^{-m_0}<1$; the identity
+$8-2\sum_\mu\cos k_\mu=4\sum_\mu\sin^2(k_\mu/2)$; the small-$k$ expansion
+$2\sum_\mu\cos k_\mu\approx 8-k^2$; the rescaling $k=\Delta p$; and the proper-time identification
+$s=N\Delta^2/8$.\\
+
+Calculation steps, limiting cases, or consistency checks subjected to automated verification
+(via Mathematica, python, LLMs):
+The derivation was produced by Claude Sonnet 5.5 and reviewed by a second LLM (ChatGPT Luna 5.6).
+No Mathematica or python verification was performed.
+
+\end{document}

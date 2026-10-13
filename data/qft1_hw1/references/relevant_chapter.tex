@@ -1,0 +1,285 @@
+\chapter{Path Integrals for Relativistic Particles}\label{ch:PI_rel}
+
+In the last chapter, we discussed the path integral representation in ordinary quantum mechanics. The real-time transition amplitude is represented as a suitably defined integral
+$$
+\langle\,q_f\,\mid \,e^{-{i\over\hbar}\,H\,T}\,\mid \,q_i\,\rangle = \int\,[D q(t)]_{\substack{q(0)=q_i \\ q(T)=q_f}} \, e^{{i\over\hbar}\,S[q(t)]}\,,
+$$
+
+over all "paths" $q(t)$ from $q_i$ to $q_f$. We now discuss how the idea of the path integral can be applied to a relativistic particle.
+
+As we saw in Chapter~\ref{ch:KG-2}, the Klein--Gordon theory describes spinless bosonic particles, and we expect that the Feynman propagator $D_{\rm F}(x_i-x_f)$ (and the corresponding Euclidean correlation function $D_{\rm E}$) may therefore admit an interpretation as the amplitude for a particle to propagate from $x_i$ to $x_f$. We would like to know whether this amplitude can be expressed as an integral over ``paths''.
+
+In classical mechanics, the action of a relativistic particle travelling from $x_i$ to $x_f$ is
+$$
+S = -m\,\int_{x_i}^{x_f}\,\sqrt{dx_{\mu}\,dx^{\mu}} = -m\,\int_{(t_i, {\bf x}_i)}^{(t_f, {\bf x}_f)}\,\sqrt{dt^2 - d{\bf x}^2}\,,
+$$
+where the integration is performed along a given path (generally described by a parametric curve $x^{\mu}(s)$) from $x_i$ to $x_f$. In classical theory it is assumed that $(dx^{0})^2 \geq {d{\bf x}^2}$ along the whole path (the particle velocity never exceeds the speed of light). Then the time component $t = x^0$ of $x^{\mu}$ can serve as the parameter along the path, and the action can be written as
+$$
+S[{\bf x}(t)] = -m \,\int_{t_i}^{t_f}\,dt\,\sqrt{1 - {\dot{\bf x}}^2}\,.
+$$
+
+In quantum theory, one may attempt to write the transition amplitude as
+$$
+\int_{{\rm paths}(i\to f)}\,e^{{i\over\hbar}\,S}\,[D{\bf x}(t)]\,,
+$$
+where the integration is over ``all paths'' from $x_i$ to $x_f$ (Fig. \ref{fig:relativistic-paths}).
+
+%    \includegraphics[totalheight=0.35\textwidth]{fig5.1.eps}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+
+\tikzset{
+midarrow/.style={
+postaction={decorate},
+decoration={markings, mark=at position #1 with {\arrow{>}}}
+}
+}
+
+% main path
+\draw[thick,midarrow=0.55]
+(0,0)
+.. controls (0.6,0.8) and (1.2,1.1) ..
+(1.7,1.3)
+.. controls (2.3,1.5) and (2.5,2.2) ..
+(2.6,3.0)
+.. controls (2.7,3.9) and (3.2,4.2) ..
+(3.4,4.4);
+
+% dashed nearby path
+\draw[thick,dashed,midarrow=0.75]
+(0,0)
+.. controls (1.0,-0.1) and (2.0,0.2) ..
+(2.4,0.6)
+.. controls (3.0,1.2) and (3.1,2.2) ..
+(3.2,3.0)
+.. controls (3.2,3.8) and (3.3,4.1) ..
+(3.4,4.4);
+
+% tangent displacement
+\draw[->] (1.1,1) -- (1.8,1.45);
+\node at (1.7,1.8) {$dx^\mu$};
+
+% labels
+\node[below left] at (0,0) {$x_i$};
+\node[above] at (3.6,4.3) {$x_f$};
+
+\end{tikzpicture}
+\caption{Different paths for a relativistic particle.}
+\label{fig:relativistic-paths}
+\end{figure}
+
+Problems arise when we attempt to give a precise meaning to this expression. On the formal side, we observe that the Hamiltonian associated with the problem,
+$$
+H = \sqrt{m^2 + {\bf p}^2}\,
+$$
+where ${\bf p}$ is the momentum conjugate to ${\bf x}$, is not ``local'' in the sense we discussed in the previous chapter: the matrix elements $\langle {\bf x} \mid H \mid {\bf x}' \rangle$ do not vanish for ${\bf x} \neq {\bf x}'$.
+%Arash: I could not find this: (check it against the Exercise in Lecture 2).
+
+A more fundamental problem is regarding the class of paths that contribute to the path integral. The expression $dx_{\mu}\,dx^{\mu}$ appearing in the square root in $S$ can be either positive or negative, depending on whether $dx^{\mu}$ is time-like or space-like. One might try to exclude from the integration those paths with space-like $dx^{\mu}$ anywhere along them, but it does not seem to be the right idea if we want to describe the propagator $D_{\rm F}$. Indeed, unlike the commutator, the function $D_{\rm F}({\bf x},t)$ does not vanish outside the light cone (i.e., for $|t| < |{\bf x}|$). It becomes exponentially small far outside the light cone, but it is not zero. This situation is similar to that of a non-relativistic particle in the classically inaccessible region of its configuration space: the wave function is exponentially small but does not vanish ("quantum tunneling"). Thus we have to admit the paths having space-like $dx^{\mu}$ somewhere along them. Once such paths are admitted, Lorentz invariance requires that paths in which $dx^0$ is allowed to take negative values (i.e. the paths with folds going ``backward in time'') be included as well:
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.8]
+
+% Path
+\draw[thick]
+(0,0) .. controls (0.5,2) and (2,2.5) .. (3,1.5) .. controls (4,0.5) and (4.5,1) .. (5,2) .. controls (5.5,3) and (5.6,3.1) .. (5.7,3.2);
+
+% Arrow along the path
+\draw[->,thick]
+(5,2) -- (5.1,2.15);
+
+% Labels
+\node[left] at (0,0) {$x_i$};
+\node[right] at (5.75,3.25) {$x_f$};
+
+\end{tikzpicture}
+\end{figure}
+%    \includegraphics[totalheight=0.35\textwidth]{fig5.2.eps}
+
+For such paths ${\bf x}(t)$ is no longer a function, and the integral over $[D{\bf x}(t)]$ is therefore invalid. Moreover, whereas in the case of space-like $dx^{\mu}$ there is a natural choice of the branch of the square root $\sqrt{dx_{\mu} dx^{\mu}}$ in the action (since $e^{iS}$ must receive exponentially small contributions from the space-like parts of the path), we have no clear intuition as to which sign should be chosen in
+the case of time-like paths going ``backward in time''.
+
+All these ambiguities are resolved by adopting the Euclidean (imaginary-time) formulation of the path integral. Replacing as before,
+$$
+t = -i\,x_4\,,
+$$
+the factor $iS$ in the exponent transforms as $i S \to -{\cal A}$, where ${\cal A}$ is the Euclidean action
+$$
+{\cal A} = m \,\int\,\sqrt{(dx_{\rm E})^2}\,,
+$$
+given by
+$$
+dx_{\rm E}^2 = dx_4^2 + d{\bf x}^2
+$$
+an explicitly positive-definite expression under the square root. In the following discussion we will often omit the subscript $E$ when referring to Euclidean 4-vectors. With this convention, one can define the Euclidean amplitude as the path integral
+$$
+\int_{{\rm paths}(x_i \to x_f)}\,e^{-{\cal A}[{\rm path}]}
+$$
+over all paths connecting two Euclidean points $x_i$ and $x_f$. One then expects that the real-time propagator can be recovered via analytic continuation, as we previously discussed.
+
+Note that
+$$
+{\cal A}[{\rm path}] = m_0\,L[{\rm path}]\,,
+$$
+where $L[{\rm path}]$ is simply the Euclidean length of the path. We have replaced $m$ by the ``bare mass'' $m_0$; as we will see this parameter does not necessarily coincide with the physical mass and generally requires ``renormalization''.
+
+By analogy with our definition of the path integral in ordinary quantum mechanics, let us define this path integral as the limit of finite-dimensional integrals. Specifically, for given (large) number $n$, we consider the piecewise linear paths from $x_i = 0$ to $x_f = x$, where each linear segment has a fixed length $\Delta$ as shown in Fig. \ref{fig:relativistic-path-discretized}.
+\begin{figure}[h]
+\centering
+
+\begin{tikzpicture}[scale=1.2, thick]
+
+% Left solid path (starting near 0)
+\draw[->] (0,0) -- (0.3,0.7);
+\draw[->] (0.3,0.7) -- (0.9,1.1);
+\draw[->] (0.9,1.1) -- (1.3,0.6);
+
+\draw[dashed] (1.3,0.6) -- (2,0.3) -- (1.7,1);
+\draw[dotted] (2.3,0.85) -- (3.7,0.45);
+\draw[dashed] (4.3,0.3) -- (4.5,0.9) -- (5.0,1.5);
+
+% Right solid path
+\draw[->] (5.0,1.5) -- (5.6,1.6);
+\draw[->] (5.6,1.6) -- (5.2,2.2);
+\draw[->] (5.2,2.2) -- (5.9,2.5);
+\draw[->] (5.9,2.5) -- (6.6,2.3);
+
+% Labels
+\node at (0,-0.3) {$0$};
+\node at (6.85,2.4) {$x$};
+
+\end{tikzpicture}
+\caption{A discretized path with segments of fixed length.}
+\label{fig:relativistic-path-discretized}
+\end{figure}
+%    \includegraphics[totalheight=0.35\textwidth]{fig5.3.eps}
+
+
+The overall length of such path is
+$$
+L_n = n\,\Delta\,.
+$$
+Let $\nu_k$ be the unit 4-vector in the direction of the $k$-th segment, so that $|\nu_k| =1$. In this discrete approximation the path integral can be written as
+\begin{equation}
+    \sum_{n=0}^{\infty}\,e^{-m_0\,\Delta\,n}\,\bigg(\prod_{k=1}^{n}\,\int\,d\mu(\nu_k)
+\bigg)\,\delta^{(4)}\big(\Delta\,\sum_{k=1}^{n}\,\nu_k - x\big)\,.
+    \label{eq:non-relativistic-path-int}
+\end{equation}
+
+Here $d\mu(\nu_k)$ stands for the standard volume measure on $S^3$, and the delta-function ensures that the vectors $\Delta\,\nu_k$ sum to $x$. In other words, the path indeed connects $0$ to $x=x_f-x_i$. Finally, the sum over $n$ is needed because we want to include all paths of arbitrary length $L$.
+
+The delta-function can be represented as
+$$
+\delta^{(4)}\big(\Delta \sum\,\nu_k - x\big) = \int\,{{d^4 P}\over{(2\pi)^4}} \,e^{i\,P \,(x-\Delta\sum \,\nu_k)}\,.
+$$
+For fixed $P$ the integration over $\prod \int\,d\mu(\nu_k)$ factorizes into a product of $n$ identical integrals $I(P\Delta)=\int\,d\mu(\nu)\,e^{-i\,\nu\,P\,\Delta}$,
+$$
+\prod_{k=1}^{n}\,\int\,d\mu(\nu_k)\,e^{-i\,\nu_k\,P\,\Delta} = \big[I(P\,\Delta)\big]^n\,,
+$$
+(setting the constant factor $e^{iPx}$ aside for a moment).
+The integral $I$ can be evaluated explicitly in terms of Bessel functions. However, its explicit form will not be needed. We are interested in the regime where $|x| \gg \Delta$, in which the integral over $P$ is dominated by contributions from $|P| \ll 1/\Delta$. Equivalently, we will consider the limit $\Delta\to 0$, in which significant contributions come from large values of $n$. In this limit, only the behavior of $I$ for small values of its argument is important. Expanding the integrand for this regime, and integrating over $S^3$ we find
+$$
+I(P\,\Delta) = A - {A}\xi\,P^2 \,\Delta^2 + O(\Delta^4)\,,
+$$
+where the exact values of the constants, namely $A = \int_{S^3}\,d\mu(\nu) = 4\pi^2$ and $\xi = 1/8$, are not important. Raising this result to the power $n$ and assuming $\xi\,P^2 \,\Delta^2 \ll 1$, we obtain
+$$
+I^n \sim A^n\,e^{-{\Delta^2 \,n}\,\xi\,P^2}\,.
+$$
+Now the Gaussian integration over $P$ can be performed. For a given $n$ we have
+$$
+\int {\frac{d^4 P}{(2\pi)^4} \, e^{i\,P x-{\Delta^2 \,n}\,\xi\,P^2}} = \left(4\pi\,n \Delta^2\xi\right)^{-2}\, e^{-{{x^2}\over {4\xi\,n\,\Delta^2}}}\,.
+$$
+Note that $\Delta$ enters here in the combination $n\,\Delta^2$, not $n\,\Delta$ as one could naively expect. Attempting to take the naive limit
+$$
+\Delta\to 0\,, \quad n\to \infty \quad {\rm with} \quad L = {n\,\Delta} = {\rm finite}
+$$
+would lead to a propagation amplitude that vanishes at any finite $|x|$. This is not surprising: our calculation is nearly identical to the well-known probability calculation for a Brownian particle. For such a particle, with typical microscopic velocity ${\bar v}$, the typical distance traveled after a time $T$ is
+$$
+{\bar x} = {\bar v}\,\sqrt{T\,\Delta t}\, .
+$$
+Here, $\Delta t$ is the typical time between collisions. In this analogy
+$$
+\Delta \sim {\bar v}\,\Delta t\,, \quad n \sim T/\Delta t\, ,
+$$
+so we expect to have
+$$
+{\bar x}^2 = n\,\Delta^2\,,
+$$
+in agreement with our calculation.
+
+We conclude that the correct continuous limit is obtained by taking
+$$
+\Delta \to 0\,,\quad n\to\infty\qquad {\rm with} \quad s = \xi\,n\,\Delta^2 = {\rm finite}\,,
+$$
+and it is the parameter $s$ that characterizes the geometry of a typical path. In this limit, the microscopic length $L=n\,\Delta$ becomes infinitely large. The overwhelming majority of paths contributing to the functional integral are extremely convoluted (fractal-like) at all scales, as illustrated in Fig. \ref{fig:crumpled-path}:
+%    \includegraphics[totalheight=0.35\textwidth]{fig5.4.eps}
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[scale=0.8, >=stealth]
+
+% Define the magnified path relative to origin
+\def\magnifiedpath{
+  (-3.46, -0.5) -- (-3.0, -0.5) -- (-3.0, -0.1) -- (-2.6, -0.1) -- (-2.6, -0.6) -- (-2.3, -0.6) -- (-2.5, -0.9) -- (-2.1, -1.2) -- (-2.1, -1.7) -- (-1.6, -1.7) -- (-1.3, -1.9) -- (-1.4, -1.6) -- (-1.1, -1.6) -- (-0.9, -2.6) -- (-0.9, -2.9) -- (-0.2, -3.1) -- (-0.2, -2.3) -- (0.1, -2.2) -- (0.0, -1.8) -- (0.2, -1.3) -- (0.0, -0.9) -- (0.5, -0.6) -- (0.5, -0.1) -- (0.3, 0.1) -- (0.7, 0.4) -- (1.1, 0.7) -- (1.4, 1.1) -- (1.7, 0.7) -- (2.1, 0.7) -- (2.0, 1.1) -- (2.6, 1.2) -- (3.2, 1.4)
+}
+
+% First part of the path
+\draw (-2.0, 0.0) -- (-1.5, 0.0) -- (-1.7, 0.3) -- (-1.0, 0.6) -- (-1.3, 0.9) -- (-1.0, 1.3) -- (-1.3, 1.5) -- (-0.9, 1.5) -- (-1.0, 1.9) -- (-2.2, 1.9) -- (-2.2, 2.2) -- (-2.6, 2.4) -- (-2.4, 2.7) -- (-2.1, 2.7) -- (-1.9, 2.4) -- (-1.4, 2.5) -- (-1.2, 2.9) -- (-1.4, 3.6) -- (-0.2, 3.5) -- (0.3, 3.7) -- (0.1, 3.9) -- (0.6, 3.9) -- (0.6, 3.6) -- (1.1, 3.6) -- (1.1, 3.8) -- (1.6, 3.4) -- (1.3, 3.0) -- (1.1, 3.0) -- (1.1, 2.7) -- (1.4, 2.7) -- (1.7, 2.7) -- (1.9, 2.9) -- (2.1, 2.9) -- (2.2, 2.3) -- (2.6, 2.2) -- (2.6, 2.5) -- (2.85, 2.83);
+
+% Small circle path
+\begin{scope}[shift={(4,3)}, scale=0.3333]
+  \draw \magnifiedpath;
+\end{scope}
+
+% Third part of the path
+\draw[->] (5.07, 3.47) -- (5.5, 3.4) -- (5.5, 3.0) -- (6.0, 3.2) -- (5.7, 3.7) -- (6.3, 4.1) -- (5.7, 4.5) -- (6.1, 4.9) -- (5.4, 5.6) -- (6.1, 5.2) -- (6.9, 5.1) -- (6.8, 5.4) -- (6.3, 5.8) -- (7.0, 6.0);
+
+% Small circle
+\draw (4,3) circle (1.16);
+
+% Large circle path
+\begin{scope}[shift={(10.5,0.66)}]
+  \draw \magnifiedpath;
+  % Large circle
+  \draw (0,0) circle (3.5);
+\end{scope}
+
+\end{tikzpicture}
+\label{fig:crumpled-path}
+\caption{A fractal-like path with fractal dimention 2.}
+%Arash, is this caption correct?
+\end{center}
+\end{figure}
+
+The parameter $s$ has the dimension of $[{\rm length}]^2$: the typical path is said to have the fractal dimension 2.
+
+Finally, there are two problematic factors that must be addressed before we can take the limit $\Delta\to 0$ and evaluate the functional integral \eqref{eq:non-relativistic-path-int}. They are combined as
+\begin{equation}
+    A^n\,e^{-m_0\,n\,\Delta} = e^{-n\,(m_0\,\Delta - \log A)}\,.
+    \label{eq:nonrelativistic-path-int-infinite-factors}
+\end{equation}
+
+Consider $m_0$ as a parameter that may depend on $\Delta$, and is free to be adjusted in the limit $\Delta \to 0$ so that
+$$
+\Delta\,m_0 (\Delta) - \log A \ \to\  \xi\,{m^2}\,\Delta^2 \qquad {\rm
+as}\qquad \Delta\to 0\,,
+$$
+where it is $m^2$, not $m_0$, which remains constant in this limit. Then the factors in \eqref{eq:nonrelativistic-path-int-infinite-factors} combine into
+$$
+e^{-m^2\,{\xi\,{n\,\Delta^2}}} \to e^{-m^2\,s}\,.
+$$
+For large values of $n$ the sum in \eqref{eq:non-relativistic-path-int} is replaced by the integral over $s$, and one obtains
+$$
+\int_{0}^{\infty}\,ds\,e^{-m^2\,s}\,\int\,{{d^4 P}\over{(2\pi)^4}}\,e^{-s\,P^2} \,e^{iPx}\,,
+$$
+which is precisely Schwinger’s proper-time representation of the Euclidean correlation function $D_{\rm E}(x)$ of the Klein–Gordon theory, \eqref{eq:schwinger}. Consequently, $D_{\rm E}(x)$ \emph{admits an interpretation as an integral over paths in Euclidean space-time}. As is well known, the Feynman propagator $D_{\rm F}$ coincides with the analytic continuation of this correlation function back to the real time, $x_4 = it$.
+
+
+\begin{remarkbox}
+    In our calculation, we assumed that the linear segments of the discretized paths all have the same lengths $\Delta$. This choice is not essential and is made purely for simplicity. One could modify the details of the finite-dimensional approximation, but in the continuum limit the same correlation function $D_{\rm E}$ is recovered, although the precise relationship between the ``bare'' and ``renormalized'' mass parameters $m_0$ and $m$ does depend on the details of the approximation. This is an elementary example of {\it universality}.
+\end{remarkbox}
+
+
+In principle, it is possible to develop a theory of interacting relativistic particles based on the idea of integrating over all particle paths, including the paths of many particles, with interaction events ("vertices"). However, a much more universal and powerful approach is based on the quantization of field variables. In the corresponding path integral, one does not integrate over the paths of particles but over the paths of the field variables, i.e., over all possible "trajectories" $\Phi({\bf x},t)$ of the fields. In the following, we elaborate on this idea in the context of the Klein–Gordon theory.

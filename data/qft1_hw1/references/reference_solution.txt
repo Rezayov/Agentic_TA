@@ -1,0 +1,126 @@
+Problem 4
+Consider a 4-dimensional hyper-cubic lattice with the lattice spacing ∆. Compute the “lattice
+propagator” as the sum over all lattice paths connecting the lattice points 0 and x,
+                                         X
+                                                  e−m0 L(path) ,
+                                      lattice path 0→x
+
+where L(path) is the number of links in the path. The path may go through a given link any
+number of times.
+    Consider the limit ∆ → 0. Observe that at fixed m0 the sum either diverges, or is dominated
+by the shortest path from 0 to x. Determine how m0 = m0 (∆) should depend on ∆ for long paths
+to remain relevant in the limit ∆ → 0.
+    Suggestion: follow the steps outlined in Lecture 7, with suitable modifications to take into
+account the lattice structure. The representation
+                                               Z π
+                                                   dk ikn
+                                        δn,0 =        e
+                                                −π 2π
+
+of the Kronecker delta may be useful.
+
+
+Solution
+Write x = ∆y, where y ∈ Z4 . Let
+
+                          S = {+e1 , −e1 , +e2 , −e2 , +e3 , −e3 , +e4 , −e4 }
+
+be the set of the eight allowed link directions. A path with n links has L(path) = n and weight
+e−m0 n . Thus the sum over paths is
+                                      ∞
+                                      X                 X        4
+                                                                 Y
+                           G∆ (x) =         e−m0 n                       δPnk=1 sµk , yµ .         (1)
+                                      n=0            s1 ,...,sn ∈S µ=1
+
+Here sµk is the µth component of the kth link direction, and δa,b is the Kronecker delta. The empty
+path is included for n = 0.
+   Using the Fourier representation of the four Kronecker deltas gives
+                  4                       4                                  n
+                                            "Z          #                         !
+                                               π/∆
+                 Y
+                                        4
+                                          Y        dP µ
+                                                                             X
+                     δPnk=1 sµk , yµ = ∆                  exp iP · x − i∆P ·    sk .            (2)
+               µ=1                    µ=1     −π/∆ 2π                                        k=1
+
+
+
+
+                                                       1
+   The sum over link directions factorizes over the steps:
+                                                   n
+                                                        !
+                              X                   X
+                                    exp −i∆P ·        sk = [Σ(P )]n ,
+                            s1 ,...,sn ∈S                       k=1
+
+where
+                                            X                         4
+                                                                      X
+                                                      −i∆P ·s
+                              Σ(P ) =             e             =2          cos(∆Pµ ).
+                                            s∈S                       µ=1
+
+The sum over n is a geometric series. Since Σ(0) = 8, it converges when 8e−m0 < 1, or m0 > log 8.
+For m0 < log 8 the sum over paths diverges. Summing the geometric series gives the exact lattice
+expression
+                                       4
+                                         "            #
+                                      Y Z π/∆ dPµ                 em0
+                        G∆ (x) = ∆4                     eiP ·x m0       .                    (3)
+                                            −π/∆ 2π           e − Σ(P )
+                                            µ=1
+
+At the critical value m0 = log 8, the Fourier integrand is singular at P = 0; in four dimensions the
+path sum at fixed lattice endpoints is still convergent, and this case can be obtained as the limit
+from m0 > log 8.
+   In the limit ∆ → 0, with x fixed, expand
+                                            4
+                                            X                                   4
+                                                                                X
+                             Σ(P ) = 2            cos(∆Pµ ) ≃ 8 − ∆2                  Pµ2 .
+                                            µ=1                                 µ=1
+
+To retain long paths and obtain a finite continuum mass parameter m, tune
+
+                                                                             ∆2 m 2
+                       em0 − 8 = ∆2 m2 ,                m0 = log 8 +                + O(∆4 ),    (4)
+                                                                               8
+with m2 > 0 for convergence (and m = 0 understood as the critical limit). Then, for fixed x ̸= 0,
+
+                                                             d4 P eiP ·x
+                                                        Z
+                                    G∆ (x)
+                                           −→                              .                     (5)
+                                     8∆2                         4 2
+                                                         R4 (2π) m + P
+                                                                         2
+
+
+For r = |x| > 0, this is the four-dimensional Green function
+                                                  
+                                                    mK1 (mr)
+                             Z
+                                  d4 P eiP ·x
+                                                  
+                                                             , m > 0,
+                                                =      4π 2 r
+                                                   1 ,
+                                      4 2     2
+                              R4 (2π) m + P       
+                                                                m = 0,
+                                                    4π 2 r2
+where K1 is a modified Bessel function. At x = 0 the normalized continuum Green function has the
+usual ultraviolet divergence. Thus it is the normalized propagator G∆ /(8∆2 ) that has a nonzero
+continuum limit; the unnormalized sum tends to zero at fixed x ̸= 0. Paths spanning a fixed
+physical distance typically use n = O(|x|2 /∆2 ) links, much more than the O(|x|/∆) links of a
+shortest path. The tuning in (4) keeps these long paths relevant.
+
+
+
+
+                                                            2
+

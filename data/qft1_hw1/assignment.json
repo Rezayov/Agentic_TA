@@ -1,0 +1,110 @@
+{
+  "question_id": "qft1-hw1-problem4",
+  "question": "Consider a 4-dimensional hyper-cubic lattice with lattice spacing Δ. Compute the lattice propagator as the sum over all lattice paths connecting lattice points 0 and x, with each path weighted by exp(-m0 L(path)), where L(path) is the number of links and links may be traversed any number of times. In the limit Δ → 0, determine how m0 = m0(Δ) must depend on Δ so that long paths remain relevant rather than the sum diverging or being dominated by the shortest path.",
+  "rubric": {
+    "title": "QFT I Homework 1, Problem 4 rubric",
+    "criteria": [
+      {
+        "criterion_id": "A1",
+        "description": "Uses the eight nearest-neighbor directions and unrestricted ordered walks, including repetitions and backtracking.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "A2",
+        "description": "Uses L = n and weight exp(-m0 n), with consistent per-link units and no artificial factorial or probability normalization; an explicitly translated physical-length convention is equivalent.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "A3",
+        "description": "Enforces the endpoint and sums over all permitted lengths, including the empty-path contact term or an explicit restriction to nonzero endpoints.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "B1",
+        "description": "Derives the endpoint Fourier/Kronecker representation on a Brillouin zone, or an equivalent lattice spectral or recurrence representation.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "B2",
+        "description": "Correctly normalizes the Fourier measure as Δ^4 d^4P/(2π)^4, or d^4k/(2π)^4 with a matching exponent and domain.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "B3",
+        "description": "Obtains Σ(P) = 2 sum_mu cos(Δ P_mu) and explains step independence or factorization, or gives the equivalent nearest-neighbor operator eigenvalue.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "B4",
+        "description": "Gives the exact geometric-series resolvent 1/(1 - exp(-m0) Σ), equivalently exp(m0)/(exp(m0) - Σ), with the correct numerator for the chosen form.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "C1",
+        "description": "Gives m0 > log 8 with the path-counting or geometric-series reason 8 exp(-m0) < 1.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "C2",
+        "description": "Correctly states that the endpoint path sum diverges for m0 < log 8.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "C3",
+        "description": "Correctly states that at m0 = log 8 the four-dimensional fixed-endpoint sum is finite despite the zero-momentum singularity.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "D1",
+        "description": "Uses Σ(P) = 8 - Δ^2 P^2 + O(Δ^4 |P|^4), or the equivalent low-momentum lattice eigenvalue expansion.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "D2",
+        "description": "Identifies the critical subtraction and a gap of order Δ^2 for finite nonzero continuum mass, allowing a smaller nonnegative gap in the massless limit.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "D3",
+        "description": "Relates the finite gap to physical mass: (exp(m0) - 8)/Δ^2 → m^2, equivalently (m0 - log 8)/Δ^2 → m^2/8, with equivalent defined notation allowed.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "D4",
+        "description": "Uses convergent-side tuning m0(Δ) ≥ log 8 with m^2 ≥ 0, treating the massless case as critical or a nonnegative limiting tuning.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "D5",
+        "description": "Explains diffusive long-path scaling n = O(Δ^-2) at fixed physical scales, or finite proper time proportional to nΔ^2.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "D6",
+        "description": "Explains why fixed positive detuning suppresses diffusive paths and contrasts them with shortest-path scaling O(Δ^-1).",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "E1",
+        "description": "Identifies the Euclidean momentum kernel 1/(P^2 + m^2), or the equivalent proper-time or position-space Green function.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "E2",
+        "description": "Gives the continuum normalization G_Δ/(8Δ^2), or an explicitly equivalent asymptotic normalization.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "E3",
+        "description": "States or unambiguously shows that the unnormalized G_Δ(x) tends to zero at fixed nonzero physical separation.",
+        "max_points": 0.5
+      },
+      {
+        "criterion_id": "E4",
+        "description": "Restricts the pointwise continuum claim to x not equal to zero and notes the ultraviolet singularity or divergence at coincidence.",
+        "max_points": 0.5
+      }
+    ]
+  },
+  "source_material": []
+}

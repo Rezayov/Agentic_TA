@@ -1,0 +1,16 @@
+{
+  // Isolated MiniMax test profile; the default GLM profile remains unchanged.
+  "base_url": "https://inference.dahl.global/v1",
+  "api_key_env": "HOMEWORK_TA_LLM_API_KEY",
+  "model": "MiniMaxAI/MiniMax-M2.7",
+  "timeout_seconds": 120,
+  "max_retries": 1,
+  "send_temperature": false,
+  // Initial probes disconnected with streaming and JSON-schema response_format.
+  // Later probes also disconnected without these; compatibility is not established.
+  // The authoritative schema remains in the prompt and is validated locally.
+  "stream": false,
+  "response_format": "prompt",
+  "max_tokens": 16384,
+  "max_response_bytes": 10000000
+}

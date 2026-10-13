@@ -1,0 +1,386 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{bm}
+\usepackage{physics}
+
+\geometry{margin=1in}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{Quantum Field Theory I}}\\[0.3cm]
+    {\large \textbf{First Homework Assignment}}\\[0.5cm]
+    \textbf{Name:} Mohammad Parsa Akrami\\
+    \textbf{Student Number:} 404210672
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{Problem}
+
+We consider a four-dimensional hypercubic lattice with lattice spacing $\Delta$.
+The lattice propagator is written as a sum over all lattice paths from $0$ to $x$,
+where each link contributes a factor $e^{-m_0\Delta}$. The directions of each
+link are
+\[
+\nu_k\in
+\left\{
+(\pm1,0,0,0),
+(0,\pm1,0,0),
+(0,0,\pm1,0),
+(0,0,0,\pm1)
+\right\}.
+\]
+
+The length of a path containing $n$ links is
+\[
+L=n\Delta.
+\]
+
+Therefore, the path sum can be written as
+\begin{equation}
+A(x)
+=
+\sum_{n=0}^{\infty}
+e^{-m_0\Delta n}
+\sum_{\{\nu_k\}}
+\delta^{(4)}_{\sum_{k=1}^{n}\nu_k,\,x/\Delta}.
+\label{eq:pathsum}
+\end{equation}
+
+Here the arguments of the Kronecker delta are dimensionless, since
+$x/\Delta$ is the dimensionless lattice coordinate.
+
+\section*{Fourier Representation of the Kronecker Delta}
+
+For dimensionless integer-valued four-vectors, the Kronecker delta can be
+represented as
+\begin{equation}
+\delta^{(4)}_{\bm N,\bm M}
+=
+\int_{-\pi}^{\pi}
+\frac{d^4 k}{(2\pi)^4}
+e^{i k\cdot(\bm N-\bm M)}.
+\label{eq:kronecker}
+\end{equation}
+
+Applying this to Eq.~\eqref{eq:pathsum}, with
+\[
+\bm N=\sum_{k=1}^{n}\nu_k,
+\qquad
+\bm M=\frac{x}{\Delta},
+\]
+gives
+\begin{equation}
+\delta^{(4)}_{\sum_{k=1}^{n}\nu_k,\,x/\Delta}
+=
+\int_{-\pi}^{\pi}
+\frac{d^4 k}{(2\pi)^4}
+\exp\left[
+ik\cdot
+\left(
+\sum_{k=1}^{n}\nu_k-\frac{x}{\Delta}
+\right)
+\right].
+\end{equation}
+
+Thus,
+\begin{equation}
+A(x)
+=
+\sum_{n=0}^{\infty}
+e^{-m_0\Delta n}
+\int_{-\pi}^{\pi}
+\frac{d^4 k}{(2\pi)^4}
+e^{-ik\cdot x/\Delta}
+\prod_{j=1}^{n}
+\left(
+\sum_{\nu_j}e^{ik\cdot\nu_j}
+\right).
+\label{eq:fourier-k}
+\end{equation}
+
+Since the four-dimensional hypercubic lattice has eight possible directions,
+we have
+\begin{equation}
+\sum_{\nu}e^{ik\cdot\nu}
+=
+2\left[
+\cos k_1+\cos k_2+\cos k_3+\cos k_4
+\right].
+\label{eq:sumdirections}
+\end{equation}
+
+Therefore,
+\begin{equation}
+A(x)
+=
+\sum_{n=0}^{\infty}
+e^{-m_0\Delta n}
+\int_{-\pi}^{\pi}
+\frac{d^4 k}{(2\pi)^4}
+e^{-ik\cdot x/\Delta}
+\left[
+2\sum_{\mu=1}^{4}\cos k_\mu
+\right]^n.
+\label{eq:Ak}
+\end{equation}
+
+Now $k$ is a \emph{dimensionless} lattice momentum. To introduce the
+physical momentum $p$, we define
+\begin{equation}
+k_\mu=p_\mu\Delta,
+\qquad
+p_\mu=\frac{k_\mu}{\Delta}.
+\end{equation}
+
+Consequently, the integration range becomes
+\[
+-\frac{\pi}{\Delta}\leq p_\mu\leq\frac{\pi}{\Delta},
+\]
+and the exponent becomes
+\[
+e^{-ik\cdot x/\Delta}=e^{-ip\cdot x}.
+\]
+
+Thus, up to the overall normalization factor coming from
+$d^4k=\Delta^4d^4p$, we can write
+\begin{equation}
+A(x)
+\sim
+\sum_{n=0}^{\infty}
+e^{-m_0\Delta n}
+\int
+d^4p\,
+e^{-ip\cdot x}
+\left[
+2\sum_{\mu=1}^{4}\cos(p_\mu\Delta)
+\right]^n.
+\label{eq:Ap}
+\end{equation}
+
+For small $\Delta$,
+\begin{equation}
+2\sum_{\mu=1}^{4}\cos(p_\mu\Delta)
+=
+8-p^2\Delta^2+O(\Delta^4),
+\end{equation}
+where
+\[
+p^2=p_1^2+p_2^2+p_3^2+p_4^2.
+\]
+
+Hence,
+\begin{align}
+\left[
+2\sum_{\mu=1}^{4}\cos(p_\mu\Delta)
+\right]^n
+&\simeq
+\left(8-p^2\Delta^2\right)^n
+\nonumber\\
+&=
+8^n
+\left(
+1-\frac{p^2\Delta^2}{8}
+\right)^n
+\nonumber\\
+&\simeq
+8^n
+e^{-np^2\Delta^2/8}.
+\label{eq:gaussian}
+\end{align}
+
+Substituting this into Eq.~\eqref{eq:Ap},
+\begin{equation}
+A(x)
+\sim
+\sum_{n=0}^{\infty}
+e^{-m_0\Delta n}
+8^n
+\int d^4p\,
+e^{-np^2\Delta^2/8}
+e^{-ip\cdot x}.
+\end{equation}
+
+Therefore,
+\begin{equation}
+A(x)
+\sim
+\sum_{n=0}^{\infty}
+\exp\left[
+-n\left(m_0\Delta-\ln 8\right)
+\right]
+\int d^4p\,
+e^{-np^2\Delta^2/8}
+e^{-ip\cdot x}.
+\label{eq:An}
+\end{equation}
+
+We see that the important combination of $\Delta$ and $n$ is
+$n\Delta^2$, rather than $n\Delta$. Thus, in the continuum limit, we define
+\begin{equation}
+s=\frac{n\Delta^2}{8}.
+\label{eq:sdef}
+\end{equation}
+
+In order for long paths to remain relevant in the continuum limit, the
+factor multiplying $n$ in Eq.~\eqref{eq:An} must be of order $\Delta^2$.
+Therefore, we tune the bare mass according to
+\begin{equation}
+m_0\Delta-\ln 8
+=
+\frac{m^2\Delta^2}{8}.
+\label{eq:mass-tuning}
+\end{equation}
+
+This gives
+\begin{equation}
+\boxed{
+m_0(\Delta)
+=
+\frac{\ln 8}{\Delta}
++
+\frac{m^2}{8}\Delta
+}.
+\label{eq:m0}
+\end{equation}
+
+With this choice,
+\begin{equation}
+e^{-n(m_0\Delta-\ln8)}
+=
+e^{-m^2n\Delta^2/8}
+=
+e^{-m^2s},
+\end{equation}
+and therefore
+\begin{equation}
+A(x)
+\sim
+\sum_n
+e^{-m^2s}
+\int d^4p\,
+e^{-sp^2}
+e^{-ip\cdot x}.
+\end{equation}
+
+In the continuum limit, the sum over $n$ becomes an integral over $s$, up to
+an overall normalization factor:
+\begin{equation}
+A(x)
+\sim
+\int_0^\infty ds\,
+e^{-m^2s}
+\int d^4p\,
+e^{-sp^2}
+e^{-ip\cdot x}.
+\end{equation}
+
+Thus the required continuum limit is obtained by tuning the bare mass as in
+Eq.~\eqref{eq:m0}.
+\section*{Shortest Path Domination for Finite $\Delta$}
+
+For finite $\Delta$, there is another regime in which the shortest paths
+dominate the path sum.
+
+Each additional link has a factor
+\[
+e^{-m_0\Delta},
+\]
+while at every step there are eight possible directions. Thus, very roughly,
+the competition between the number of paths and the suppression of each path
+is controlled by
+\begin{equation}
+8e^{-m_0\Delta}.
+\end{equation}
+
+If
+\begin{equation}
+8e^{-m_0\Delta}<1,
+\end{equation}
+or equivalently
+\begin{equation}
+m_0\Delta>\ln8,
+\label{eq:shortestcondition}
+\end{equation}
+longer paths are exponentially suppressed.
+
+For a fixed endpoint $x$, the shortest possible path has the minimum number
+of links,
+\begin{equation}
+n_{\min}
+=
+\sum_{\mu=1}^{4}
+\left|\frac{x_\mu}{\Delta}\right|.
+\end{equation}
+
+Any longer path must contain additional steps. In particular, because the
+lattice is bipartite, paths connecting the same two points differ in length
+by an even number of links, so a path with length
+\[
+n=n_{\min}+2r
+\]
+contains $2r$ additional links compared with a shortest path.
+
+Each additional pair of links introduces an exponential suppression of the
+form
+\[
+e^{-2m_0\Delta}.
+\]
+
+Therefore, when
+\[
+m_0\Delta\gg\ln8,
+\]
+the exponential suppression of longer paths overwhelms the growth in the
+number of available paths, and the path sum is dominated by the shortest
+paths.
+
+Hence, for finite $\Delta$, the two relevant regimes can be summarized as
+\begin{equation}
+\begin{array}{ccl}
+m_0\Delta>\ln8
+&\Longrightarrow&
+\text{long paths are suppressed,}\\[0.2cm]
+m_0\Delta\simeq\ln8
+&\Longrightarrow&
+\text{long paths can remain relevant.}
+\end{array}
+\end{equation}
+
+In particular, the continuum limit requires tuning $m_0\Delta$ to approach
+$\ln8$ with a difference of order $\Delta^2$, as in
+Eq.~\eqref{eq:mass-tuning}.
+
+For a fixed finite $m_0$ while taking $\Delta\to0$, however,
+\[
+m_0\Delta\longrightarrow0,
+\]
+and therefore
+\[
+8e^{-m_0\Delta}\longrightarrow8>1.
+\]
+Thus the path sum is not in the shortest-path regime in this limit; instead,
+the number of long paths grows too rapidly and the sum diverges. The
+shortest-path domination discussed above applies to finite $\Delta$ when
+$m_0\Delta$ is sufficiently larger than $\ln8$.
+
+\section*{AI use declaration}
+
+The AI model used in preparing and revising this homework solution was
+\textbf{GPT-5.6 Luna}.
+
+The solution was checked using the course lecture notes as a reference,
+in particular the derivation of the lattice path sum, the Fourier
+representation, and the continuum limit involving the combination
+$n\Delta^2$.
+
+The AI was also used to revise and correct a small mistake in the
+calculation: the Kronecker delta was rewritten with dimensionless
+arguments, and the distinction between the dimensionless lattice momentum
+$k$ and the physical momentum $p$ was made explicit. The main derivation
+and notation of the original solution were otherwise retained.\\
+The AI was also used to convert the hand written solution into Latex code.
+\end{document}

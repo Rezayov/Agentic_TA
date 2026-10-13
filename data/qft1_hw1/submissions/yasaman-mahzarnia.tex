@@ -1,0 +1,799 @@
+
+\documentclass[11pt,a4paper,oneside]{article}
+
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% ---------- Macros ----------
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\dd}{\mathrm{d}}
+
+% ---------- Compact spacing ----------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em}
+\setlength{\abovedisplayskip}{0.65em}
+\setlength{\belowdisplayskip}{0.65em}
+\setlength{\abovedisplayshortskip}{0.45em}
+\setlength{\belowdisplayshortskip}{0.45em}
+\setlength{\jot}{0.35em}
+
+\titlespacing*{\section}{0pt}{1.2em}{0.45em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.35em}
+
+\setlist{nosep,leftmargin=*}
+
+\begin{document}
+	
+	% ============================================================
+	% Title
+	% ============================================================
+	
+	\begin{center}
+		
+		{\Large\textbf{Quantum Field Theory}}
+		
+		\vspace{0.4cm}
+		
+		{\Large\textbf{First Exercise Series}}
+		
+		\vspace{0.7cm}
+		
+		{\large\textbf{Four-Dimensional Lattice Path Propagator}}
+		
+		\vspace{0.25cm}
+		
+		{\large Complete Derivation and Continuum Limit}
+		
+		\vspace{0.7cm}
+		
+		{\large\textbf{Yasaman Mahzarnia}}
+		
+	\end{center}
+	
+	\vspace{0.8cm}
+	
+	% ============================================================
+	% Problem
+	% ============================================================
+	
+	\section*{Problem}
+	
+	Consider a four-dimensional hypercubic Euclidean lattice with lattice spacing
+	$\Delta$. A path moves only between nearest-neighbour lattice sites. For a path
+	containing $L$ links, assign the weight
+	\[
+	\ee^{-m_0 L}.
+	\]
+	
+	The lattice propagator is
+	\begin{equation}
+		G_\Delta(x)
+		=
+		\sum_{\text{paths }0\to x}
+		\ee^{-m_0 L(\text{path})}.
+		\label{eq:definition}
+	\end{equation}
+	
+	The goal is to compute this path sum and determine how $m_0$ must depend on
+	$\Delta$ in order to obtain a nontrivial continuum limit.
+	
+	% ============================================================
+	% Lattice sites and allowed steps
+	% ============================================================
+	
+	\section{Lattice Sites and Allowed Steps}
+	
+	A lattice site is labelled by an integer four-vector
+	\begin{equation}
+		n=(n_1,n_2,n_3,n_4),
+		\qquad
+		n_\mu\in\mathbb{Z}.
+	\end{equation}
+	
+	Its physical coordinate is
+	\begin{equation}
+		x_\mu=\Delta n_\mu,
+		\qquad
+		x=\Delta n.
+		\label{eq:x-delta-n}
+	\end{equation}
+	
+	The vector $n$ is dimensionless, while $x$ has dimensions of length.
+	
+	At every site there are two directions along each of the four axes,
+	\[
+	+\hat e_\mu,
+	\qquad
+	-\hat e_\mu,
+	\qquad
+	\mu=1,2,3,4.
+	\]
+	
+	Therefore there are
+	\[
+	2\times4=8
+	\]
+	allowed nearest-neighbour steps at every site.
+	
+	% ============================================================
+	% Grouping paths
+	% ============================================================
+	
+	\section{Grouping Paths by Their Number of Links}
+	
+	Let $C_L(n)$ be the number of paths with exactly $L$ steps from $0$ to $n$.
+	
+	All such paths have the same weight $\ee^{-m_0L}$, hence
+	\begin{equation}
+		\boxed{
+			G_\Delta(n)
+			=
+			\sum_{L=0}^{\infty}
+			\ee^{-m_0L}C_L(n).
+		}
+		\label{eq:G-C}
+	\end{equation}
+	
+	The initial condition is
+	\begin{equation}
+		\boxed{
+			C_0(n)=\delta_{n,0}.
+		}
+		\label{eq:initial-condition}
+	\end{equation}
+	
+	With zero steps, the walker is at the origin only.
+	
+	% ============================================================
+	% Long paths and critical value
+	% ============================================================
+	
+	\section{Long Paths and the Critical Value}
+	
+	An individual path of length $L$ has weight $\ee^{-m_0L}$.
+	
+	However, if the endpoint is unrestricted, there are $8^L$ possible step
+	sequences. This does not mean that $8^L$ paths arrive at a fixed endpoint;
+	for fixed $n$,
+	\[
+	C_L(n)\leq 8^L.
+	\]
+	
+	Summing over all endpoints gives
+	\begin{equation}
+		\sum_n C_L(n)=8^L.
+	\end{equation}
+	
+	Thus the total weight of all unrestricted paths of length $L$ scales as
+	\begin{equation}
+		W_L
+		\sim
+		8^L\ee^{-m_0L}
+		=
+		\left(8\ee^{-m_0}\right)^L
+		=
+		\ee^{-(m_0-\ln8)L}.
+		\label{eq:entropy-energy}
+	\end{equation}
+	
+	Therefore,
+	\begin{align}
+		m_0>\ln8
+		&\quad\Longrightarrow\quad
+		\text{long paths are exponentially suppressed},
+		\\
+		m_0=\ln8
+		&\quad\Longrightarrow\quad
+		\text{critical boundary of convergence},
+		\\
+		m_0<\ln8
+		&\quad\Longrightarrow\quad
+		\text{the path sum diverges}.
+	\end{align}
+	
+	For the continuum limit, the critical value is approached from above:
+	\begin{equation}
+		m_0(\Delta)\to\ln8^+.
+	\end{equation}
+	
+	% ============================================================
+	% Recursion
+	% ============================================================
+	
+	\section{Recursion Relation for Path Counting}
+	
+	To arrive at $n$ after $L+1$ steps, the final step must come from one of the
+	eight nearest neighbours of $n$.
+	
+	Hence
+	\begin{equation}
+		\boxed{
+			C_{L+1}(n)
+			=
+			\sum_{\mu=1}^{4}
+			\left[
+			C_L(n-\hat e_\mu)
+			+
+			C_L(n+\hat e_\mu)
+			\right].
+		}
+		\label{eq:recurrence}
+	\end{equation}
+	
+	% ============================================================
+	% Fourier transform
+	% ============================================================
+	
+	\section{Fourier Transform on the Lattice}
+	
+	We Fourier transform with respect to the lattice coordinate $n$, rather than
+	the path length $L$, because a lattice shift becomes multiplication by a phase
+	in Fourier space.
+	
+	Define
+	\begin{equation}
+		\boxed{
+			\widetilde C_L(k)
+			=
+			\sum_{n\in\mathbb{Z}^4}
+			\ee^{-ik\cdot n}C_L(n).
+		}
+		\label{eq:fourier-forward}
+	\end{equation}
+	
+	The inverse transform is
+	\begin{equation}
+		\boxed{
+			C_L(n)
+			=
+			\int_{[-\pi,\pi]^4}
+			\frac{\dd^4k}{(2\pi)^4}
+			\,
+			\ee^{ik\cdot n}
+			\widetilde C_L(k).
+		}
+		\label{eq:fourier-inverse}
+	\end{equation}
+	
+	Here
+	\[
+	k\cdot n
+	=
+	\sum_{\mu=1}^{4}k_\mu n_\mu.
+	\]
+	
+	Since $n_\mu$ is an integer,
+	\[
+	\ee^{i(k_\mu+2\pi)n_\mu}
+	=
+	\ee^{ik_\mu n_\mu},
+	\]
+	so it is sufficient to take
+	\[
+	-\pi\leq k_\mu\leq\pi.
+	\]
+	
+	% ============================================================
+	% Initial condition in Fourier space
+	% ============================================================
+	
+	\section{Initial Condition in Fourier Space}
+	
+	At $L=0$, insert $C_0(n)=\delta_{n,0}$ into the Fourier-transform definition:
+	\begin{align}
+		\widetilde C_0(k)
+		&=
+		\sum_n
+		\ee^{-ik\cdot n}C_0(n)
+		\\
+		&=
+		\sum_n
+		\ee^{-ik\cdot n}\delta_{n,0}
+		\\
+		&=
+		\ee^{-ik\cdot0}
+		=
+		1.
+	\end{align}
+	
+	Thus
+	\begin{equation}
+		\boxed{
+			\widetilde C_0(k)=1.
+		}
+		\label{eq:C0tilde}
+	\end{equation}
+	
+	The Kronecker delta selects only the origin term.
+	
+	% ============================================================
+	% Solving recursion
+	% ============================================================
+	
+	\section{Solving the Recursion Relation in Fourier Space}
+	
+	Fourier transforming Eq.~\eqref{eq:recurrence}, use the changes of variables
+	$r=n-\hat e_\mu$ and $r=n+\hat e_\mu$, respectively:
+	\begin{align}
+		\sum_n
+		\ee^{-ik\cdot n}C_L(n-\hat e_\mu)
+		&=
+		\ee^{-ik_\mu}\widetilde C_L(k),
+		\\
+		\sum_n
+		\ee^{-ik\cdot n}C_L(n+\hat e_\mu)
+		&=
+		\ee^{ik_\mu}\widetilde C_L(k).
+	\end{align}
+	
+	Therefore,
+	\begin{align}
+		\widetilde C_{L+1}(k)
+		&=
+		\sum_{\mu=1}^{4}
+		\left(
+		\ee^{-ik_\mu}
+		+
+		\ee^{ik_\mu}
+		\right)
+		\widetilde C_L(k)
+		\\
+		&=
+		\left[
+		2\sum_{\mu=1}^{4}\cos k_\mu
+		\right]
+		\widetilde C_L(k).
+		\label{eq:recurrence-fourier}
+	\end{align}
+	
+	We used
+	\[
+	\ee^{i\theta}+\ee^{-i\theta}=2\cos\theta.
+	\]
+	
+	The factor
+	\[
+	2\sum_\mu\cos k_\mu
+	\]
+	is the one-step hopping factor in Fourier space.
+	
+	% ============================================================
+	% Solution for C_L
+	% ============================================================
+	
+	\section{Solution for $C_L(n)$}
+	
+	Define
+	\begin{equation}
+		F(k)
+		=
+		2\sum_{\mu=1}^{4}\cos k_\mu.
+	\end{equation}
+	
+	Since $\widetilde C_0(k)=1$, Eq.~\eqref{eq:recurrence-fourier} gives
+	\begin{equation}
+		\boxed{
+			\widetilde C_L(k)
+			=
+			F(k)^L
+			=
+			\left[
+			2\sum_{\mu=1}^{4}\cos k_\mu
+			\right]^L.
+		}
+		\label{eq:CLtilde-solution}
+	\end{equation}
+	
+	Applying the inverse transform,
+	\begin{equation}
+		\boxed{
+			C_L(n)
+			=
+			\int_{[-\pi,\pi]^4}
+			\frac{\dd^4k}{(2\pi)^4}
+			\,
+			\ee^{ik\cdot n}
+			\left[
+			2\sum_{\mu=1}^{4}\cos k_\mu
+			\right]^L.
+		}
+		\label{eq:CL-solution}
+	\end{equation}
+	
+	% ============================================================
+	% Exact lattice propagator
+	% ============================================================
+	
+	\section{Exact Lattice Propagator}
+	
+	Insert Eq.~\eqref{eq:CL-solution} into Eq.~\eqref{eq:G-C}:
+	\begin{align}
+		G_\Delta(n)
+		&=
+		\int_{[-\pi,\pi]^4}
+		\frac{\dd^4k}{(2\pi)^4}
+		\,
+		\ee^{ik\cdot n}
+		\sum_{L=0}^{\infty}
+		\left[
+		2\ee^{-m_0}
+		\sum_{\mu=1}^{4}\cos k_\mu
+		\right]^L.
+	\end{align}
+	
+	The sum over $L$ is geometric:
+	\begin{equation}
+		\sum_{L=0}^{\infty}r^L
+		=
+		\frac{1}{1-r},
+		\qquad
+		|r|<1.
+	\end{equation}
+	
+	Hence
+	\begin{equation}
+		\boxed{
+			G_\Delta(n)
+			=
+			\int_{[-\pi,\pi]^4}
+			\frac{\dd^4k}{(2\pi)^4}
+			\,
+			\frac{
+				\ee^{ik\cdot n}
+			}{
+				1
+				-
+				2\ee^{-m_0}
+				\displaystyle\sum_{\mu=1}^{4}\cos k_\mu
+			}.
+		}
+		\label{eq:lattice-propagator}
+	\end{equation}
+	
+	% ============================================================
+	% Convergence
+	% ============================================================
+	
+	\section{Convergence Condition}
+	
+	The largest value of
+	\[
+	2\sum_\mu\cos k_\mu
+	\]
+	is at $k=0$:
+	\begin{equation}
+		2\sum_{\mu=1}^{4}\cos0=8.
+	\end{equation}
+	
+	Thus convergence requires
+	\begin{equation}
+		8\ee^{-m_0}<1,
+	\end{equation}
+	or
+	\begin{equation}
+		\boxed{
+			m_0>\ln8.
+		}
+		\label{eq:convergence}
+	\end{equation}
+	
+	% ============================================================
+	% Continuum variables
+	% ============================================================
+	
+	\section{Continuum Variables}
+	
+	Take $\Delta\to0$ while keeping $x=\Delta n$ fixed.
+	
+	The lattice plane wave is $\ee^{ik\cdot n}$, while the continuum plane wave is
+	$\ee^{ip\cdot x}$.
+	
+	Matching their phases gives
+	\begin{equation}
+		k\cdot n
+		=
+		p\cdot x
+		=
+		p\cdot(\Delta n),
+	\end{equation}
+	and hence
+	\begin{equation}
+		\boxed{
+			k=\Delta p.
+		}
+		\label{eq:k-delta-p}
+	\end{equation}
+	
+	Therefore
+	\begin{equation}
+		\ee^{ik\cdot n}
+		=
+		\ee^{ip\cdot x},
+		\qquad
+		\dd^4k
+		=
+		\Delta^4\dd^4p.
+	\end{equation}
+	
+	Equation~\eqref{eq:lattice-propagator} becomes
+	\begin{equation}
+		G_\Delta(x)
+		=
+		\int_{[-\pi/\Delta,\pi/\Delta]^4}
+		\frac{\Delta^4\dd^4p}{(2\pi)^4}
+		\,
+		\frac{
+			\ee^{ip\cdot x}
+		}{
+			1
+			-
+			2\ee^{-m_0}
+			\displaystyle\sum_{\mu=1}^{4}
+			\cos(\Delta p_\mu)
+		}.
+		\label{eq:propagator-p}
+	\end{equation}
+	
+	% ============================================================
+	% Small Delta expansion
+	% ============================================================
+	
+	\section{Small-$\Delta$ Expansion}
+	
+	For fixed physical momentum $p$,
+	\begin{equation}
+		\cos(\Delta p_\mu)
+		=
+		1
+		-
+		\frac{\Delta^2p_\mu^2}{2}
+		+
+		O(\Delta^4p_\mu^4).
+	\end{equation}
+	
+	With
+	\[
+	p^2
+	=
+	\sum_{\mu=1}^{4}p_\mu^2,
+	\]
+	this gives
+	\begin{equation}
+		2\sum_{\mu=1}^{4}\cos(\Delta p_\mu)
+		=
+		8
+		-
+		\Delta^2p^2
+		+
+		O(\Delta^4p^4).
+	\end{equation}
+	
+	Hence the denominator is
+	\begin{align}
+		D_\Delta(p)
+		&=
+		1
+		-
+		2\ee^{-m_0}
+		\sum_{\mu=1}^{4}\cos(\Delta p_\mu)
+		\\
+		&=
+		1
+		-
+		8\ee^{-m_0}
+		+
+		\ee^{-m_0}\Delta^2p^2
+		+
+		O(\Delta^4p^4).
+		\label{eq:denominator-expansion}
+	\end{align}
+	
+	% ============================================================
+	% Tuning m0
+	% ============================================================
+	
+	\section{Why $m_0$ Must Be Tuned}
+	
+	If $m_0>\ln8$ is held fixed, then
+	\[
+	1-8\ee^{-m_0}
+	\]
+	is a nonzero constant, while the $p^2$ term vanishes as $\Delta^2$.
+	
+	The continuum limit would then lose the momentum dependence needed for a
+	propagator of the form
+	\[
+	\frac{1}{p^2+m^2}.
+	\]
+	
+	Therefore,
+	\begin{equation}
+		\boxed{
+			1-8\ee^{-m_0(\Delta)}
+			=
+			O(\Delta^2).
+		}
+	\end{equation}
+	
+	This implies
+	\[
+	m_0(\Delta)\to\ln8^+.
+	\]
+	
+	Define the physical mass $m$ by choosing
+	\begin{equation}
+		\boxed{
+			1-8\ee^{-m_0(\Delta)}
+			=
+			\ee^{-m_0(\Delta)}m^2\Delta^2.
+		}
+		\label{eq:tuning-condition}
+	\end{equation}
+	
+	Multiplying by $\ee^{m_0(\Delta)}$ gives
+	\begin{equation}
+		\ee^{m_0(\Delta)}
+		=
+		8+m^2\Delta^2.
+	\end{equation}
+	
+	Thus
+	\begin{equation}
+		\boxed{
+			m_0(\Delta)
+			=
+			\ln(8+m^2\Delta^2)
+			=
+			\ln8
+			+
+			\frac{m^2\Delta^2}{8}
+			+
+			O(\Delta^4).
+		}
+		\label{eq:m0-tuning}
+	\end{equation}
+	
+	% ============================================================
+	% Continuum propagator
+	% ============================================================
+	
+	\section{Continuum Klein--Gordon Propagator}
+	
+	With this tuning,
+	\begin{equation}
+		D_\Delta(p)
+		=
+		\ee^{-m_0(\Delta)}
+		\Delta^2(p^2+m^2)
+		+
+		O(\Delta^4p^4).
+	\end{equation}
+	
+	Therefore,
+	\begin{align}
+		G_\Delta(x)
+		&\simeq
+		\ee^{m_0(\Delta)}\Delta^2
+		\int
+		\frac{\dd^4p}{(2\pi)^4}
+		\,
+		\frac{\ee^{ip\cdot x}}{p^2+m^2}.
+		\label{eq:G-asymptotic}
+	\end{align}
+	
+	The raw path sum contains the overall lattice-dependent factor
+	$\ee^{m_0}\Delta^2$.
+	
+	Remove it by defining
+	\begin{equation}
+		\boxed{
+			D_E(x)
+			=
+			\lim_{\Delta\to0}
+			\frac{\ee^{-m_0(\Delta)}}{\Delta^2}
+			G_\Delta(x).
+		}
+		\label{eq:normalization}
+	\end{equation}
+	
+	Using Eq.~\eqref{eq:G-asymptotic},
+	\begin{equation}
+		\boxed{
+			D_E(x)
+			=
+			\int_{\mathbb{R}^4}
+			\frac{\dd^4p}{(2\pi)^4}
+			\,
+			\frac{\ee^{ip\cdot x}}{p^2+m^2}.
+		}
+		\label{eq:KG-propagator}
+	\end{equation}
+	
+	This is the Euclidean propagator of a free Klein--Gordon field.
+	
+	% ============================================================
+	% Final result
+	% ============================================================
+	
+	\section*{Final Result}
+	
+	The exact lattice propagator is
+	\begin{equation}
+		\boxed{
+			G_\Delta(n)
+			=
+			\int_{[-\pi,\pi]^4}
+			\frac{\dd^4k}{(2\pi)^4}
+			\,
+			\frac{
+				\ee^{ik\cdot n}
+			}{
+				1
+				-
+				2\ee^{-m_0}
+				\displaystyle\sum_{\mu=1}^{4}\cos k_\mu
+			}.
+		}
+	\end{equation}
+	
+	The necessary tuning is
+	\begin{equation}
+		\boxed{
+			m_0(\Delta)
+			=
+			\ln(8+m^2\Delta^2)
+			=
+			\ln8
+			+
+			\frac{m^2\Delta^2}{8}
+			+
+			O(\Delta^4).
+		}
+	\end{equation}
+	
+	Finally,
+	\begin{equation}
+		\boxed{
+			D_E(x)
+			=
+			\lim_{\Delta\to0}
+			\frac{\ee^{-m_0(\Delta)}}{\Delta^2}
+			G_\Delta(x)
+			=
+			\int_{\mathbb{R}^4}
+			\frac{\dd^4p}{(2\pi)^4}
+			\,
+			\frac{\ee^{ip\cdot x}}{p^2+m^2}.
+		}
+	\end{equation}
+
+\newpage
+\subsection*{AI Use Declaration}
+
+\textbf{Model(s) used:}
+Perplexity AI (for generating the full LaTeX code and helping to explain the solution steps).
+
+\textbf{Revisions/corrections made to model output, and clarifications added:}
+
+I did not change the mathematical steps or the final formulas, because the derivation produced by the AI looked correct to me. My follow-up questions were about conceptual points that I did not fully understand at first: why we Fourier transform with respect to the lattice coordinate $n$ instead of the path length $L$, why a momentum variable $p$ appears when we set $k = \Delta p$ and try to match a continuum plane wave $e^{ip\cdot x}$, and how the tuning of $m_0(\Delta)$ is chosen so that the lattice result reproduces the known form of the continuum Klein--Gordon propagator.
+
+The AI explained that the introduction of $p$ is motivated by the fact that we already know what the Klein--Gordon propagator looks like in momentum space and are effectively designing the lattice limit to match it. Based on these answers, I only refined the textual explanations around these points; the equations and their order were left unchanged.
+
+\textbf{Comparisons/checks against the lecture notes:}
+
+I did not formally compare the output against the lecture notes, but since this material was covered in the previous lecture, I checked the main steps against what I remembered from class.
+
+\textbf{Calculation steps, limiting cases, or consistency checks verified by hand:}
+
+I reviewed and checked almost all main calculations on paper.
+
+\textbf{Calculation steps, limiting cases, or consistency checks subjected to automated verification (via Mathematica, Python, LLMs):}
+
+I did not check any calculation with Mathematica or Python; I only used a text-based LLM to generate and organize the LaTeX code and explanations.
+
+
+\end{document}
+```

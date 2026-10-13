@@ -1,0 +1,446 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\e}{\mathrm e}
+\newcommand{\dd}{\,\mathrm d}
+
+\title{QFT 1 - Problem set 1 \\
+	
+	\large The Four-Dimensional Lattice Propagator}
+\author{Abolfazl Farmanian - 404300285}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\section{Problem and the key question}
+	Consider the four-dimensional hypercubic lattice of spacing $\Delta>0$,
+	\[
+	\Lambda_\Delta=\{\Delta n:n=(n_1,n_2,n_3,n_4)\in\Z^4\}.
+	\]
+	A nearest-neighbor step changes exactly one integer coordinate by $+1$ or $-1$, so every site has $8$ possible outgoing steps. For fixed lattice points $0$ and $x=\Delta n$, define
+	\[
+	G_\Delta(x,0)
+	=\sum_{\gamma:0\to x}\e^{-m_0L(\gamma)},
+	\]
+	where $L(\gamma)$ is the number of links in the walk. Repeated visits to sites and repeated traversals of links are allowed, so the sum is over \emph{all} finite nearest-neighbor walks.
+	
+	The important question is not merely to find a formal expression for $G_\Delta$, but to determine how the dimensionless per-link parameter $m_0$ must depend on $\Delta$ as $\Delta\to0$ so that arbitrarily long paths remain relevant and a nontrivial continuum propagator survives.
+	
+	The answer will be
+	\[
+	\boxed{
+		m_0(\Delta)=\ln 8+O(\Delta^2)
+		\qquad(\Delta\to0),
+	}
+	\]
+	and, when the limiting continuum field has mass $m$,
+	\[
+	\boxed{
+		m_0(\Delta)=\ln\!\bigl(8+m^2\Delta^2\bigr)
+		=\ln8+\frac{m^2}{8}\Delta^2+O(\Delta^4).}
+	\]
+	The derivation below explains both the exact lattice propagator and the physical origin of this tuning.
+	
+	\section{From paths to a lattice Green's function}
+	Write $x=\Delta n$ and let $e_\mu$, $\mu=1,\dots,4$, denote the standard basis vectors of $\Z^4$. Define the nearest-neighbor adjacency operator $A$ by
+	\begin{equation}
+		\label{eq:A}
+		(Af)(x)=\sum_{\mu=1}^4\Bigl[f(x+\Delta e_\mu)+f(x-\Delta e_\mu)\Bigr].
+	\end{equation}
+	Thus $A_{xy}=1$ when $x$ and $y$ are nearest neighbors and $A_{xy}=0$ otherwise.
+	
+	For every $L\ge0$,
+	\begin{equation}
+		\label{eq:walk-count}
+		(A^L)_{x0}
+		=\#\{\text{$L$-step nearest-neighbor walks from $0$ to $x$}\}.
+	\end{equation}
+	Indeed,
+	\[
+	(A^L)_{x0}
+	=\sum_{z_1,\ldots,z_{L-1}}
+	A_{xz_{L-1}}A_{z_{L-1}z_{L-2}}\cdots A_{z_1 0},
+	\]
+	and every nonzero term corresponds to one allowed sequence of links. No condition forbids a site or a link from occurring more than once.
+	
+	Set
+	\[
+	q:=\e^{-m_0}.
+	\]
+	Grouping the path sum according to its length gives the exact formal identity
+	\begin{equation}
+		\label{eq:path-series}
+		G_\Delta(x,0)
+		=\sum_{L=0}^\infty q^L(A^L)_{x0}
+		=\left[\sum_{L=0}^\infty(qA)^L\right]_{x0}.
+	\end{equation}
+	Whenever the Neumann series converges in operator norm,
+	\begin{equation}
+		\label{eq:resolvent}
+		G_\Delta=(I-qA)^{-1},
+		\qquad
+		(I-qA)G_\Delta=I.
+	\end{equation}
+	Thus the all-path sum is the kernel of a discrete resolvent.
+	
+	\section{Why the critical value is $m_0=\ln8$}
+	The simplest way to see the critical tuning is to compare the exponential growth in the number of walks with the exponential cost of a walk. There are $8^L$ unrestricted $L$-step walks starting from a given site, while each one carries the factor $q^L=\e^{-m_0L}$. Thus the net exponential factor is
+	\[
+	8^Lq^L=(8q)^L=\e^{-L(m_0-\ln8)}.
+	\]
+	This identifies the critical value
+	\begin{equation}
+		\label{eq:critical}
+		8q_c=1
+		\qquad\Longleftrightarrow\qquad
+		q_c=\frac18,
+		\qquad
+		m_{0,c}=\ln8.
+	\end{equation}
+	
+	This argument must be interpreted with the endpoint constraint in mind. The number of walks from $0$ to a fixed $x$ is smaller than $8^L$ by a polynomial factor, but that polynomial factor does not change the critical exponential threshold. In four dimensions, for a fixed endpoint compatible with the lattice parity, the large-$L$ behavior is of random-walk form
+	\[
+	(A^L)_{x0}\sim 8^L\,L^{-2}
+	\exp\!\left[-\frac{2|x|^2}{L\Delta^2}\right]
+	\times(\text{constant and parity factor}),
+	\]
+	so the endpoint condition changes powers and the Gaussian factor, but not the critical value $8q=1$.
+	
+	Consequently:
+	\[
+	\begin{array}{lll}
+		m_0>\ln8 &\Longrightarrow& 8q<1,\quad \text{long paths are exponentially suppressed},\\[2mm]
+		m_0<\ln8 &\Longrightarrow& 8q>1,\quad \text{the path sum diverges},\\[2mm]
+		m_0=\ln8 &\Longrightarrow& 8q=1,\quad \text{the exponential suppression exactly cancels the walk growth}.
+	\end{array}
+	\]
+	There is a subtle distinction here: at $m_0=\ln8$, the operator Neumann series does not converge in operator norm, because the spectrum of $A$ reaches $8$. Nevertheless, in $d=4$ the \emph{fixed-endpoint} massless lattice Green function is finite: the corresponding simple random walk is transient, and the critical Fourier singularity behaves as $1/|k|^2$, which is locally integrable in four dimensions. This distinction is not needed for the massive tuning, but it is important for stating the critical case precisely.
+	
+	\section{Exact lattice equation and effective mass}
+	Define the standard finite-difference Laplacian
+	\begin{equation}
+		\label{eq:laplacian}
+		(\nabla_\Delta^2f)(x)
+		=\frac1{\Delta^2}\sum_{\mu=1}^4
+		\Bigl[f(x+\Delta e_\mu)+f(x-\Delta e_\mu)-2f(x)\Bigr].
+	\end{equation}
+	Comparing \eqref{eq:A} and \eqref{eq:laplacian}, one obtains the exact identity
+	\begin{equation}
+		\label{eq:A-lap}
+		A=8I+\Delta^2\nabla_\Delta^2.
+	\end{equation}
+	Hence
+	\[
+	I-qA
+	=q\Bigl[(q^{-1}-8)I-\Delta^2\nabla_\Delta^2\Bigr].
+	\]
+	Since $q^{-1}=\e^{m_0}$, it is natural to define the exact finite-spacing mass parameter by
+	\begin{equation}
+		\label{eq:meff}
+		m_\Delta^2:=\frac{q^{-1}-8}{\Delta^2}
+		=\frac{\e^{m_0}-8}{\Delta^2}.
+	\end{equation}
+	Then
+	\begin{equation}
+		\label{eq:lattice-green-equation}
+		\Bigl(m_\Delta^2-\nabla_\Delta^2\Bigr)G_\Delta(x,0)
+		=\frac{\e^{m_0}}{\Delta^2}\,\delta_{n,0},
+		\qquad x=\Delta n,
+	\end{equation}
+	where $\delta_{n,0}$ is the Kronecker delta on $\Z^4$.
+	
+	Suppose we want a continuum limit with a finite physical mass $m$. Then the cleanest tuning is to keep
+	\[
+	m_\Delta^2=m^2
+	\]
+	for every $\Delta$. Equation \eqref{eq:meff} then gives the exact relation
+	\begin{equation}
+		\label{eq:exact-tuning}
+		\boxed{
+			m_0(\Delta)=\ln\!\bigl(8+m^2\Delta^2\bigr).}
+	\end{equation}
+	Therefore
+	\begin{equation}
+		\label{eq:tuning}
+		\boxed{
+			m_0(\Delta)=\ln8+\frac{m^2}{8}\Delta^2+O(\Delta^4).}
+	\end{equation}
+	
+	More generally, even before specifying $m$, the problem's requirement that long paths remain relevant implies only
+	\begin{equation}
+		\label{eq:general-tuning}
+		\boxed{
+			m_0(\Delta)=\ln8+c\,\Delta^2+o(\Delta^2),}
+	\end{equation}
+	with a finite coefficient $c$. The continuum mass is then $m^2=8c$ (for the normalization used here). Thus the essential answer is the $\Delta^2$ approach to the critical value $\ln8$.
+	
+	If instead $m_0$ is held fixed above $\ln8$, then $m_\Delta^2\sim\Delta^{-2}$ and the physical correlation length shrinks to zero in lattice units converted to fixed physical coordinates: propagation over a fixed nonzero distance becomes trivial. If $m_0$ is held below $\ln8$, the path sum diverges. Thus a nontrivial continuum limit requires critical tuning.
+	
+	\section{Fourier representation using the suggested Kronecker-delta identity}
+	The suggested identity is
+	\begin{equation}
+		\label{eq:kronecker-fourier}
+		\delta_{n,0}
+		=\int_{[-\pi,\pi]^4}\frac{\dd^4\theta}{(2\pi)^4}
+		\e^{i\theta\cdot n}.
+	\end{equation}
+	It can be used directly to impose the endpoint of a walk.
+	
+	Let a length-$L$ walk consist of steps $\delta_1,\dots,\delta_L$, where each $\delta_j$ is one of $\pm e_1,\dots,\pm e_4$. It reaches $n$ precisely when
+	\[
+	\delta_1+\cdots+\delta_L=n.
+	\]
+	Thus
+	\[
+	1_{\{\delta_1+\cdots+\delta_L=n\}}
+	=\delta_{\delta_1+\cdots+\delta_L-n,0}
+	\]
+	and by \eqref{eq:kronecker-fourier},
+	\[
+	1_{\{\delta_1+\cdots+\delta_L=n\}}
+	=\int_{[-\pi,\pi]^4}\frac{\dd^4\theta}{(2\pi)^4}
+	\e^{i\theta\cdot(\delta_1+\cdots+\delta_L-n)}.
+	\]
+	Summing independently over the eight choices of every step gives
+	\begin{align}
+		G_\Delta(\Delta n,0)
+		&=\int_{[-\pi,\pi]^4}\frac{\dd^4\theta}{(2\pi)^4}
+		\e^{-i\theta\cdot n}
+		\sum_{L=0}^\infty
+		\left[q\sum_{\delta=\pm e_1,\dots,\pm e_4}
+		\e^{i\theta\cdot\delta}\right]^L \\
+		&=\int_{[-\pi,\pi]^4}\frac{\dd^4\theta}{(2\pi)^4}
+		\frac{\e^{-i\theta\cdot n}}
+		{1-2q\sum_{\mu=1}^4\cos\theta_\mu}.
+		\label{eq:fourier-G}
+	\end{align}
+	This is the exact lattice propagator in the Brillouin zone. The Fourier multiplier of the hopping operator is
+	\[
+	\lambda_A(\theta)=2\sum_{\mu=1}^4\cos\theta_\mu,
+	\]
+	so the same result follows immediately by diagonalizing the resolvent \eqref{eq:resolvent}.
+	
+	\section{Continuum limit}
+	Introduce physical momentum
+	\[
+	k=\frac{\theta}{\Delta},
+	\qquad
+	\theta=k\Delta,
+	\]
+	so the Brillouin zone becomes $[-\pi/\Delta,\pi/\Delta]^4$. Define the lattice momentum
+	\begin{equation}
+		\label{eq:khat}
+		\widehat k_\Delta^{\,2}
+		:=\frac4{\Delta^2}\sum_{\mu=1}^4
+		\sin^2\!\left(\frac{k_\mu\Delta}{2}\right).
+	\end{equation}
+	Then the identity
+	\[
+	8-2\sum_{\mu=1}^4\cos(k_\mu\Delta)
+	=\Delta^2\widehat k_\Delta^{\,2}
+	\]
+	gives, under the exact tuning \eqref{eq:exact-tuning},
+	\begin{align}
+		1-2q\sum_{\mu=1}^4\cos(k_\mu\Delta)
+		&=1-8q+q\Delta^2\widehat k_\Delta^{\,2} \\
+		&=q\Delta^2\bigl(m^2+\widehat k_\Delta^{\,2}\bigr).
+		\label{eq:exact-denom}
+	\end{align}
+	Since the lattice kernel and the continuum Green function use different normalizations, define
+	\begin{equation}
+		\label{eq:Ddelta}
+		D_\Delta(x):=\frac{q}{\Delta^2}G_\Delta(x,0).
+	\end{equation}
+	Using \eqref{eq:fourier-G}, changing variables $\theta=k\Delta$, and using \eqref{eq:exact-denom}, we obtain the exact representation
+	\begin{equation}
+		\label{eq:Ddelta-fourier}
+		D_\Delta(x)
+		=\int_{[-\pi/\Delta,\pi/\Delta]^4}
+		\frac{\dd^4k}{(2\pi)^4}
+		\frac{\e^{-ik\cdot x}}
+		{m^2+\widehat k_\Delta^{\,2}}.
+	\end{equation}
+	For fixed physical $k$,
+	\[
+	\widehat k_\Delta^{\,2}
+	=\sum_{\mu=1}^4\left[
+	\frac{2}{\Delta}\sin\!\left(\frac{k_\mu\Delta}{2}\right)
+	\right]^2
+	\longrightarrow k^2:=\sum_{\mu=1}^4k_\mu^2.
+	\]
+	The Brillouin zone expands to all of $\R^4$, and therefore the continuum limit is the Euclidean Klein--Gordon Green function
+	\begin{equation}
+		\label{eq:continuum-propagator}
+		\boxed{
+			D(x)=\int_{\R^4}\frac{\dd^4k}{(2\pi)^4}
+			\frac{\e^{-ik\cdot x}}{k^2+m^2},
+			\qquad
+			(m^2-\partial^2)D(x)=\delta^{(4)}(x).
+		}
+	\end{equation}
+	Here $\partial^2=\sum_\mu\partial_{x_\mu}^2$. For $m>0$ and $x\neq0$,
+	\[
+	D(x)=\frac{m}{4\pi^2|x|}K_1(m|x|),
+	\]
+	although this closed form is not needed for the lattice argument.
+	
+	\section{Why the long-path scale is $L\sim\Delta^{-2}$}
+	The $\Delta^2$ tuning has a direct random-walk interpretation. Under
+	\[
+	m_0(\Delta)=\ln8+\frac{m^2}{8}\Delta^2+O(\Delta^4),
+	\]
+	one has
+	\[
+	q=\e^{-m_0}
+	=\frac18\exp\!\left[-\frac{m^2}{8}\Delta^2+O(\Delta^4)\right].
+	\]
+	Therefore the exponential competition between the number of walks and their weight is
+	\begin{equation}
+		\label{eq:entropy-mass}
+		(8q)^L
+		=\exp\!\left[-\frac{m^2}{8}L\Delta^2+O(L\Delta^4)\right].
+	\end{equation}
+	A finite nontrivial factor in the continuum limit is possible precisely when
+	\[
+	\boxed{L\Delta^2=O(1),}
+	\]
+	so the relevant walk lengths diverge as
+	\[
+	L=O(\Delta^{-2}).
+	\]
+	This is the diffusive scaling of a random walk.
+	
+	This also explains why the shortest path does not determine the continuum limit. For a fixed physical separation $x$, the shortest path has
+	\[
+	L_{\min}
+	=\sum_{\mu=1}^4|n_\mu|
+	=\frac1\Delta\sum_{\mu=1}^4|x_\mu|
+	=O(\Delta^{-1}),
+	\]
+	which is parametrically shorter than the diffusive scale $\Delta^{-2}$. The continuum propagator is produced by the huge multiplicity of long paths, including paths with repeated backtracking and revisits, rather than by the shortest path alone.
+	
+	The same scaling appears directly in momentum space. For small lattice momentum,
+	\[
+	2\sum_{\mu=1}^4\cos(k_\mu\Delta)
+	=8-k^2\Delta^2+O(\Delta^4k^4),
+	\]
+	so
+	\[
+	1-2q\sum_\mu\cos(k_\mu\Delta)
+	=q\Delta^2\bigl(m^2+k^2\bigr)+O(\Delta^4k^4).
+	\]
+	The constant term must therefore be tuned to vanish at leading order, i.e.
+	\[
+	1-8q=O(\Delta^2),
+	\]
+	which is exactly
+	\[
+	m_0-\ln8=O(\Delta^2).
+	\]
+	The quadratic coefficient in momentum then becomes the continuum kinetic term, while the finite $O(\Delta^2)$ deviation from criticality becomes the physical mass.
+	
+	Equivalently, introducing the proper-time variable
+	\[
+	s:=\frac{L\Delta^2}{8},
+	\]
+	the long-path factor in \eqref{eq:entropy-mass} becomes
+	\[
+	(8q)^L\longrightarrow \e^{-m^2s},
+	\]
+	while the random-walk displacement produces the Gaussian factor
+	\[
+	\exp\!\left(-\frac{|x|^2}{4s}\right).
+	\]
+	This gives the usual Euclidean proper-time representation
+	\begin{equation}
+		\label{eq:proper-time}
+		D(x)
+		=\int_0^\infty\frac{\dd s}{(4\pi s)^2}
+		\exp\!\left(-m^2s-\frac{|x|^2}{4s}\right),
+	\end{equation}
+	which is equivalent to \eqref{eq:continuum-propagator}. The lattice calculation therefore reproduces the continuum worldline intuition: $m^2$ controls the proper-time suppression of long paths, while $s\propto L\Delta^2$ survives the continuum limit.
+	
+	\section{Convergence and the massless case}
+	For positive $m$, the tuning gives $m_0(\Delta)>\ln8$, hence $q<1/8$ for every $\Delta>0$. The operator resolvent is then well defined by the convergent Neumann series. As $\Delta\to0$, $m_0(\Delta)$ approaches the critical value from above, so the correlation length in lattice steps diverges while the physical correlation length remains finite.
+	
+	At $m=0$,
+	\[
+	m_0=\ln8,\qquad q=\frac18.
+	\]
+	The operator series is no longer norm-convergent, but the fixed-endpoint Green function in four dimensions remains finite because the massless random walk is transient. In Fourier space the only infrared singularity is $1/k^2$, which is locally integrable in four dimensions. Thus the critical point corresponds to the massless continuum theory.
+	
+	The distinction is important:
+	\[
+	\text{operator-norm convergence}\neq\text{pointwise convergence of a fixed Green-function entry}.
+	\]
+	One should therefore avoid saying without qualification that the fixed-endpoint path sum itself necessarily diverges exactly at $m_0=\ln8$ in four dimensions.
+	
+	\section{Final answer}
+	The weighted sum over all nearest-neighbor lattice walks is the lattice Green function
+	\[
+	G_\Delta=(I-\e^{-m_0}A)^{-1},
+	\]
+	where $A$ is the eight-neighbor adjacency operator. Its exact Fourier representation is
+	\[
+	\boxed{
+		G_\Delta(\Delta n,0)
+		=\int_{[-\pi,\pi]^4}\frac{\dd^4\theta}{(2\pi)^4}
+		\frac{\e^{-i\theta\cdot n}}
+		{1-2\e^{-m_0}\sum_{\mu=1}^4\cos\theta_\mu}.
+	}
+	\]
+	The exact lattice mass parameter is
+	\[
+	\boxed{
+		m_\Delta^2=\frac{\e^{m_0}-8}{\Delta^2}.}
+	\]
+	Therefore, to keep a finite nonzero continuum mass $m$,
+	\[
+	\boxed{
+		\e^{m_0}=8+m^2\Delta^2,
+		\qquad
+		m_0(\Delta)=\ln(8+m^2\Delta^2).
+	}
+	\]
+	For small $\Delta$,
+	\[
+	\boxed{
+		m_0(\Delta)
+		=\ln8+\frac{m^2}{8}\Delta^2+O(\Delta^4).}
+	\]
+	More generally, the essential condition for long paths to remain relevant is
+	\[
+	\boxed{m_0(\Delta)-\ln8=O(\Delta^2).}
+	\]
+	The reason is that the number of walks grows exponentially as $8^L$, while the weight contributes $\e^{-m_0L}$. Critical tuning cancels the exponential growth, and the residual $O(\Delta^2)$ departure from criticality combines with the diffusive scaling
+	\[
+	\boxed{L\sim\Delta^{-2}}
+	\]
+	to produce finite continuum proper time and hence the Euclidean Klein--Gordon propagator.
+	
+	\newpage
+	
+	\subsection*{AI use declaration}
+	
+	\textbf{Model(s) used:} The models used in preparing and reviewing this solution were Gemini Pro 3.1, GapGPT--ChatGPT 6--Astra, GapGPT--Claude--Fable 5.1, and ChatGPT Free.
+	
+	\textbf{Revisions/corrections made to model output, and clarifications added:} First, I used Gemini Pro 3.1 to explore possible methods for solving the problem. Three main approaches were identified: (1) the \emph{Momentum Space Method}, which solves the discrete counting problem by taking a discrete Fourier transform, summing the geometric series over all path lengths, and then expanding the resulting momentum-space propagator; (2) the \emph{Path Integral / Random Walk Method}, which treats the paths as a statistical random walk and analyzes the continuum limit with the number of steps tending to infinity as the lattice spacing tends to zero; and (3) the \emph{Discrete Green's Function Method}, which bypasses explicit path counting by deriving a nearest-neighbor recursion relation and rewriting it in the form of a discrete Green's-function equation. I identified the third approach as the one most closely aligned with the approach suggested in Lecture 7, and I found its mathematical structure the most suitable for this problem. I therefore chose the Discrete Green's Function Method as the main derivation. I then asked Gemini Pro 3.1, GapGPT--ChatGPT 6--Astra, and GapGPT--Claude--Fable 5.1 to generate and explain solutions based on this approach, including clear \LaTeX{} versions. I subsequently submitted the resulting solutions to ChatGPT Free for comparison and evaluation. Before this comparison, I already considered the GapGPT--ChatGPT 6--Astra version to be the best-written of the generated solutions; the external evaluation reached the same conclusion. I then asked ChatGPT to improve that solution, particularly its mathematical completeness, continuum-limit explanation, physical interpretation, and discussion of the long-path scaling. The present solution incorporates those revisions and clarifications.
+	
+	\textbf{Comparisons/checks against the lecture notes:} The method-selection was checked against the lecture notes. In particular, the Path Integral / Random Walk approach was identified as closely related to the path-integral development in Lecture 6, while the Discrete Green's Function approach was identified as the approach most directly related to the Green's-function treatment in Lecture 7. The resulting derivation was checked for consistency with the methods, notation, and continuum interpretation presented in the lecture notes.
+	
+	\textbf{Calculation steps, limiting cases, or consistency checks verified by hand:} I did not independently re-derive every equation in full. Instead, I performed sanity checks on the main steps of the derivation and checked the steps that initially appeared potentially subtle or suspicious. These checks included the lattice nearest-neighbor counting, the Fourier representation, the continuum expansion, the critical value $m_0=\ln 8$, the required $O(\Delta^2)$ tuning, and the consistency of the continuum limit.
+	
+	\textbf{Calculation steps, limiting cases, or consistency checks subjected to automated verification (via Mathematica, Python, LLMs):} The derivation was iteratively reviewed with the LLMs listed above. Intermediate results and complete versions of the solution were repeatedly submitted to different models to identify errors, shortcomings, missing explanations, and possible improvements. No Mathematica or Python code was used for verification, and no other programming-based automated calculation was performed. The automated/model-assisted verification therefore consisted of iterative LLM-based checking and comparison rather than numerical or symbolic computation software.
+	
+	
+\end{document}

@@ -1,0 +1,65 @@
+// Providers and their models are tried in listed order. No credentials here.
+{
+  "failure_threshold": 3,
+  "retry_delay_seconds": 1,
+  "providers": [
+    {
+      "name": "gcat",
+      "base_url": "https://core.g-cat.ir/v1",
+      "api_key_env": "GCAT_API_KEY",
+      "timeout_seconds": 120,
+      "send_temperature": false,
+      "stream": true,
+      "response_format": "prompt",
+      "max_tokens": 16384,
+      "max_response_bytes": 10000000,
+      "models": [
+        "agy/gemini-3.8-flash-high",
+        "cx/gpt-6-luna-medium"
+      ]
+    },
+    {
+      "name": "agentrouter",
+      "base_url": "https://agentrouter.org/v1",
+      "api_key_env": "AGENTROUTER_API_KEY",
+      "timeout_seconds": 120,
+      "send_temperature": false,
+      "stream": true,
+      "response_format": "prompt",
+      "max_tokens": 16384,
+      "max_response_bytes": 10000000,
+      "models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "name": "dahl",
+      "base_url": "https://inference.dahl.global/v1",
+      "api_key_env": "HOMEWORK_TA_LLM_API_KEY",
+      "timeout_seconds": 120,
+      "send_temperature": false,
+      "stream": true,
+      "response_format": "json_schema",
+      "max_tokens": 16384,
+      "reasoning_effort": "low",
+      "max_response_bytes": 10000000,
+      "models": [
+        "zai-org/GLM-5.3-Flash"
+      ]
+    },
+    {
+      "name": "hormouz",
+      "base_url": "https://api.hormouz.net/v1",
+      "api_key_env": "HORMOUZ_API_KEY",
+      "timeout_seconds": 120,
+      "send_temperature": false,
+      "stream": true,
+      "response_format": "prompt",
+      "max_tokens": 16384,
+      "max_response_bytes": 10000000,
+      "models": [
+        "qwen/qwen3.8-flash"
+      ]
+    }
+  ]
+}

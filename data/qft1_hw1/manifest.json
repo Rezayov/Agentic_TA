@@ -1,0 +1,84 @@
+{
+  "format_version": 1,
+  "assignment_id": "qft1-hw1-problem4",
+  "original_submission_count": 11,
+  "unique_submission_count": 10,
+  "submissions": [
+    {
+      "original": "homeworks/Assignment 1 (403212088).tex",
+      "canonical": "data/qft1_hw1/submissions/403212088_sayed-heyder-ali-zia.tex",
+      "sha256": "88236b378a01c9fb5588b1130bc8664fa56cc9cde2eeebe2bf05816615ae64c7"
+    },
+    {
+      "original": "homeworks/HW1 (2).tex",
+      "canonical": "data/qft1_hw1/submissions/erfan-najafian.tex",
+      "sha256": "0319aeddadef84ff711203e3b04fbdcb90a012ed1dae943b9adfb66f338cf197"
+    },
+    {
+      "original": "homeworks/HW1 (3).tex",
+      "canonical": "data/qft1_hw1/submissions/vahid-forghanipour.tex",
+      "sha256": "5dfdee0d1f81e666ed366bf626bc38d73e4746113ae1c9fcd88649e7b3f33380"
+    },
+    {
+      "original": "homeworks/HW1,404210037.tex",
+      "canonical": "data/qft1_hw1/submissions/404210037.tex",
+      "sha256": "07716bdd44fb260330482c714257f00423c8b08d72ac48f1e505297f51dc5242"
+    },
+    {
+      "original": "homeworks/Problem Set 1 (1).tex",
+      "canonical": "data/qft1_hw1/submissions/abolfazl-balouch.tex",
+      "sha256": "d702d2d1d11ed045b173288e84d740641685d0651a656b1e99edf4ac096eb534"
+    },
+    {
+      "original": "homeworks/QFT I HW 1 Mohammad Parsa Akrami.tex",
+      "canonical": "data/qft1_hw1/submissions/404210672_mohammad-parsa-akrami.tex",
+      "sha256": "e8d29dd8dfd34b54776dbb84195b3164cae4c5c4448096b165ebd1274ed5871c"
+    },
+    {
+      "original": "homeworks/QFT1-Set1.tex",
+      "canonical": "data/qft1_hw1/submissions/404300285_abolfazl-farmanian.tex",
+      "sha256": "b287ddb0e3d67b3ed0f077cb9f64553c2ea7ae32b00c2965ef929f07eefff748"
+    },
+    {
+      "original": "homeworks/QFT_1.tex",
+      "canonical": "data/qft1_hw1/submissions/yasaman-mahzarnia.tex",
+      "sha256": "a2a5402c2fc871ecc586df5a60a8aca7c30d54351f5b4ffc270f754e311c9f02"
+    },
+    {
+      "original": "homeworks/hw_403200498.tex",
+      "canonical": "data/qft1_hw1/submissions/403200498.tex",
+      "sha256": "431d91808cffa6df2b9103012924673c2a78e48ff7b9bbaeb1912a4a6dcff212"
+    },
+    {
+      "original": "homeworks/hw_403200498 (1).tex",
+      "canonical": "data/qft1_hw1/submissions/403200498.tex",
+      "sha256": "431d91808cffa6df2b9103012924673c2a78e48ff7b9bbaeb1912a4a6dcff212",
+      "duplicate_of": "homeworks/hw_403200498.tex"
+    },
+    {
+      "original": "homeworks/main.tex",
+      "canonical": "data/qft1_hw1/submissions/405300323_farzad-rahimi.tex",
+      "sha256": "19785f5845cd95cb067f0a46c4eb881a6ab8439f2e89413b2d6b73b581eba171"
+    }
+  ],
+  "references": [
+    {
+      "original": "Ref/Rubric.md",
+      "canonical": "data/qft1_hw1/references/rubric.md",
+      "sha256": "b2e144b698f08dc681a6c7042004c2f5a4a26de8015290ca8e60e7df140af309",
+      "role": "grading rubric"
+    },
+    {
+      "original": "Ref/HW1RelevantChapter.txt",
+      "canonical": "data/qft1_hw1/references/relevant_chapter.tex",
+      "sha256": "26d9769683bab7435205b5635c2316638ef26b135ab8f6047dc217468b1217a6",
+      "role": "retrieval source"
+    },
+    {
+      "original": "Ref/HW1 reference solution.pdf",
+      "canonical": "data/qft1_hw1/references/reference_solution.pdf",
+      "sha256": "694f6eb267341248a8d38b65bd9907db963b87fc45d50e2527d418da197aa151",
+      "role": "reference solution"
+    }
+  ]
+}

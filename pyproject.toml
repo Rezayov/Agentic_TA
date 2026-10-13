@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "homework-ta"
+version = "0.1.0"
+description = "A safe, modular AI teaching assistant for mathematical homework"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "jsonschema>=4.23,<5",
+  "litellm>=1.80,<2",
+  "pydantic>=2.12,<3",
+]
+
+[project.scripts]
+homework-ta-check-provider = "homework_ta.interfaces.provider_cli:main"
+homework-ta = "homework_ta.interfaces.cli:main"
+homework-ta-index = "homework_ta.interfaces.index_cli:main"
+homework-ta-prepare = "homework_ta.interfaces.prepare_cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.4,<10",
+  "ruff>=0.14,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/homework_ta"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"prompts" = "homework_ta/prompts"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Retain vendored upstream source unchanged; runtime uses the curated prompt only.
+extend-exclude = ["agent-skills/latex-formatting"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+

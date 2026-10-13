@@ -1,0 +1,17 @@
+{
+  // OpenAI-compatible provider settings. Keep credentials in the ignored .env file.
+  "base_url": "https://inference.dahl.global/v1",
+  "api_key_env": "HOMEWORK_TA_LLM_API_KEY",
+  "model": "zai-org/GLM-5.3-Flash",
+  "timeout_seconds": 120,
+  "max_retries": 1,
+  // Omit the optional sampling override for provider compatibility.
+  "send_temperature": false,
+  // Stream long assessments; enforce the supplied JSON schema locally.
+  "stream": true,
+  "response_format": "json_schema",
+  "max_tokens": 16384,
+  "reasoning_effort": "low",
+  // SSE framing and reasoning tokens count toward this bounded transport budget.
+  "max_response_bytes": 10000000
+}

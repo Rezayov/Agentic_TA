@@ -1,0 +1,601 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\title{Lattice Propagator and Continuum Limit for a Scalar Field on a Hypercubic Lattice}
+\author{Student Code: 403200498}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Pipeline of the proof}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Define the lattice and the lattice propagator.
+    \item Derive the recursion relation for the propagator.
+    \item Introduce the Brillouin zone and Fourier transform.
+    \item Solve the recursion in momentum space to obtain the exact lattice propagator.
+    \item Analyze convergence at fixed bare mass \(m_0\).
+    \item Extract the correlation length and derive the tuning condition.
+    \item Compute the required scaling of the bare mass \(m_0(\Delta)\).
+    \item Match to the continuum Euclidean propagator and identify the physical mass.
+\end{enumerate}
+
+\section{Step 1: Define the lattice and the lattice propagator}
+
+We work on a \(4\)-dimensional hypercubic lattice with lattice spacing \(\Delta\).  
+Lattice points are labelled by integer 4-vectors
+\[
+n=(n_1,n_2,n_3,n_4)\in\mathbb Z^4 .
+\]
+The physical coordinate of the lattice point \(n\) is
+\[
+x=\Delta n .
+\]
+A \textbf{link} is a step from a lattice point to one of its \(8\) nearest neighbours:
+\[
+\pm e_\mu,\qquad \mu=1,2,3,4,
+\]
+where \(e_\mu\) is the unit vector in the \(\mu\)-th direction.  
+A \textbf{path} from \(0\) to \(n\) is any sequence of such links whose net displacement is \(n\).  
+The path may wander, go backward, cross itself, and may traverse a given link any number of times.
+
+Let
+\[
+L(\text{path})=\text{number of links in the path}.
+\]
+Each link contributes a factor
+\[
+t=e^{-m_0},
+\]
+where \(m_0\) is the bare mass parameter in lattice units.  
+Therefore a path of length \(L\) contributes
+\[
+t^L=e^{-m_0 L}.
+\]
+The \textbf{lattice propagator} from \(0\) to \(n\) is defined as
+\begin{equation}
+\boxed{
+G(n)=\sum_{\text{lattice paths }0\to n} t^{L(\text{path})}.
+}
+\tag{1}
+\end{equation}
+Equivalently, since \(x=\Delta n\),
+\[
+G(n)\equiv G(x/\Delta).
+\]
+
+\section{Step 2: Derive the recursion relation for the propagator}
+
+Split all paths from \(0\) to \(n\) into two classes.
+
+\subsection{The empty path}
+The empty path exists only when \(n=0\).  
+It has length \(0\) and contributes
+\[
+1=\delta_{n,0}.
+\]
+
+\subsection{Non-empty paths}
+Every non-empty path has a first step.  
+The first step must be one of
+\[
+s e_\mu,\qquad s=\pm 1,\quad \mu=1,2,3,4.
+\]
+Suppose the first step is \(s e_\mu\).  
+After this step, the path is at the lattice point \(s e_\mu\).  
+The remaining part of the path must go from \(s e_\mu\) to \(n\).
+
+By \textbf{translation invariance of the lattice}, the number and weights of the remaining paths from \(s e_\mu\) to \(n\) are the same as those of paths from \(0\) to \(n-s e_\mu\).  
+Therefore the total contribution of all paths whose first step is \(s e_\mu\) is
+\[
+t\,G(n-s e_\mu).
+\]
+Summing over all possible first steps \(s e_\mu\) gives
+\[
+t\sum_{\mu=1}^4\bigl[G(n-e_\mu)+G(n+e_\mu)\bigr].
+\]
+Adding the empty-path contribution, we obtain the recursion relation
+\begin{equation}
+\boxed{
+G(n)=\delta_{n,0}
++
+t\sum_{\mu=1}^4\bigl[G(n-e_\mu)+G(n+e_\mu)\bigr].
+}
+\tag{2}
+\end{equation}
+
+\section{Step 3: Introduce the Brillouin zone and Fourier transform}
+
+The \textbf{Brillouin zone} is the fundamental domain of momentum space for a system defined on a lattice. It is the set of all distinct momenta \(k\) that label the independent Fourier modes on the lattice.
+
+Because the lattice is discrete, momenta are only defined modulo \(2\pi/\Delta\) (in units where \(\Delta=1\), modulo \(2\pi\)). This means that two momenta differing by \(2\pi\) in any component describe the same physical mode. Therefore, we can restrict \(k_\mu\) to an interval of length \(2\pi\), conventionally chosen as
+\[
+k_\mu\in[-\pi,\pi].
+\]
+This interval is the Brillouin zone for a hypercubic lattice with unit lattice spacing.
+
+We use the representation of the Kronecker delta:
+\begin{equation}
+\delta_{n,0}
+=
+\int_{-\pi}^{\pi}\frac{d^4k}{(2\pi)^4}\,e^{ik\cdot n},
+\qquad
+k\cdot n=\sum_{\mu=1}^4 k_\mu n_\mu.
+\tag{3}
+\end{equation}
+Write the propagator as a Fourier integral:
+\begin{equation}
+G(n)=
+\int_{-\pi}^{\pi}\frac{d^4k}{(2\pi)^4}\,
+e^{ik\cdot n}\,\widetilde G(k).
+\tag{4}
+\end{equation}
+Substitute (3) and (4) into the recursion (2):
+\[
+\int\frac{d^4k}{(2\pi)^4}\,e^{ik\cdot n}\,\widetilde G(k)
+=
+\int\frac{d^4k}{(2\pi)^4}\,e^{ik\cdot n}
+\left[
+1
++
+t\sum_{\mu=1}^4
+\left(
+e^{-ik_\mu}+e^{ik_\mu}
+\right)
+\widetilde G(k)
+\right].
+\]
+Since this must hold for all \(n\), the integrands must be equal:
+\[
+\widetilde G(k)
+=
+1
++
+2t\sum_{\mu=1}^4\cos k_\mu\;\widetilde G(k).
+\]
+Solving for \(\widetilde G(k)\),
+\begin{equation}
+\widetilde G(k)
+=
+\frac{1}{
+1-2t\sum_{\mu=1}^4\cos k_\mu
+}.
+\tag{5}
+\end{equation}
+
+\section{Step 4: Exact lattice propagator}
+
+Therefore the exact lattice propagator is
+\begin{equation}
+\boxed{
+G(n)
+=
+\int_{-\pi}^{\pi}\frac{d^4k}{(2\pi)^4}\,
+\frac{e^{ik\cdot n}}{
+1-2t\sum_{\mu=1}^4\cos k_\mu
+}.
+}
+\tag{6}
+\end{equation}
+Define the denominator
+\begin{equation}
+D(k)=1-2t\sum_{\mu=1}^4\cos k_\mu.
+\tag{7}
+\end{equation}
+Then
+\begin{equation}
+G(n)=
+\int_{-\pi}^{\pi}\frac{d^4k}{(2\pi)^4}\,
+\frac{e^{ik\cdot n}}{D(k)}.
+\tag{8}
+\end{equation}
+
+\section{Step 5: Convergence at fixed \(m_0\)}
+
+At \(k=0\),
+\begin{equation}
+D(0)=1-8t.
+\tag{9}
+\end{equation}
+
+\subsection{Case \(m_0<\log 8\)}
+Then
+\[
+t=e^{-m_0}>\frac18,
+\qquad
+D(0)=1-8t<0.
+\]
+As \(k\) varies over the Brillouin zone, \(\sum_{\mu=1}^4\cos k_\mu\) ranges from \(-4\) to \(4\).  
+Thus \(D(k)\) ranges from \(1-8t<0\) to \(1+8t>0\).  
+By continuity, \(D(k)\) vanishes somewhere in the Brillouin zone.  
+Therefore the integrand in (8) has a pole on the integration contour, and the sum over paths diverges.
+
+\subsection{Case \(m_0>\log 8\)}
+Then
+\[
+t<\frac18,
+\qquad
+D(k)>0\quad\text{for all }k.
+\]
+The integral converges.  
+For large \(|n|\), the propagator decays exponentially with a finite correlation length in lattice units.
+
+\subsection{Case \(m_0=\log 8\)}
+Then
+\[
+t=\frac18,
+\qquad
+D(k)\ge 0,
+\]
+with \(D(k)=0\) only at \(k=0\).  
+In \(4\) dimensions the integral converges, but \(G(n)\) decays only as a power.
+
+\subsection{Conclusion for fixed \(m_0\)}
+At fixed \(m_0\), in the limit \(\Delta\to 0\) with \(x\) fixed:
+\begin{itemize}
+    \item If \(m_0<\log 8\), the sum diverges.
+    \item If \(m_0\ge \log 8\), the sum converges but is dominated by paths of length proportional to \(|n|\), and \(G(n)\to 0\) for fixed physical separation \(x\).
+    \item To keep long paths relevant in the continuum limit, \(m_0\) must be tuned.
+\end{itemize}
+
+\section{Step 6: Correlation length and tuning condition}
+
+For \(t<1/8\), \(D(k)>0\) on the real contour.  
+We may deform the \(k\)-contour into the complex plane by Cauchy's theorem, because the integrand is analytic except at poles.
+
+To extract the large-\(|n|\) behaviour, write
+\[
+n=|n|\,\hat n,
+\qquad
+\hat n_\mu=\frac{n_\mu}{|n|},
+\qquad
+\sum_{\mu=1}^4\hat n_\mu^2=1.
+\]
+Set
+\[
+k=i\kappa\,\hat n,
+\qquad \kappa>0.
+\]
+Then
+\[
+e^{ik\cdot n}=e^{i(i\kappa\hat n)\cdot n}
+=e^{-\kappa|n|}.
+\]
+The leading exponential decay comes from the pole of \(1/D(k)\) closest to the real axis.  
+The pole condition is
+\[
+D(i\kappa\hat n)=0.
+\]
+Using (7),
+\begin{equation}
+D(i\kappa\hat n)
+=
+1-2t\sum_{\mu=1}^4\cosh(\kappa\hat n_\mu).
+\tag{10}
+\end{equation}
+For small \(\kappa\), expand
+\[
+\cosh(\kappa\hat n_\mu)
+=
+1+\frac12\kappa^2\hat n_\mu^2+O(\kappa^4).
+\]
+Therefore
+\[
+\sum_{\mu=1}^4\cosh(\kappa\hat n_\mu)
+=
+4+\frac12\kappa^2\sum_{\mu=1}^4\hat n_\mu^2+O(\kappa^4)
+=
+4+\frac12\kappa^2+O(\kappa^4).
+\]
+Substitute into (10):
+\begin{equation}
+D(i\kappa\hat n)
+=
+1-2t\left(4+\frac12\kappa^2+O(\kappa^4)\right)
+=
+1-8t-t\kappa^2+O(\kappa^4).
+\tag{11}
+\end{equation}
+Setting this to zero gives
+\[
+1-8t-t\kappa^2=0,
+\]
+so
+\begin{equation}
+\kappa^2=\frac{1-8t}{t}.
+\tag{12}
+\end{equation}
+Therefore the correlation length in lattice units is
+\begin{equation}
+\xi_{\rm lat}=\frac{1}{\kappa}
+=
+\sqrt{\frac{t}{1-8t}}.
+\tag{13}
+\end{equation}
+For \(t\) close to \(1/8\), write \(t=1/8-\varepsilon\). Then \(1-8t=8\varepsilon\), and
+\[
+\xi_{\rm lat}
+=
+\sqrt{\frac{1/8-\varepsilon}{8\varepsilon}}
+\approx
+\frac{1}{8\sqrt{\varepsilon}}
+=
+\frac{1}{8\sqrt{(1-8t)/8}}
+=
+\frac{\sqrt{2}}{4}\frac{1}{\sqrt{1-8t}}.
+\]
+Thus, up to a constant factor,
+\begin{equation}
+\boxed{
+\xi_{\rm lat}\sim \frac{1}{\sqrt{1-8t}}.
+}
+\tag{14}
+\end{equation}
+The physical correlation length is
+\begin{equation}
+\xi_{\rm phys}=\Delta\,\xi_{\rm lat}
+\sim
+\frac{\Delta}{\sqrt{1-8t}}.
+\tag{15}
+\end{equation}
+To keep \(\xi_{\rm phys}\) finite as \(\Delta\to 0\), we need
+\[
+\sqrt{1-8t}\sim \Delta.
+\]
+Squaring,
+\[
+1-8t\sim \Delta^2.
+\]
+Therefore we write
+\begin{equation}
+\boxed{
+1-8t=8c\,\Delta^2+O(\Delta^4).
+}
+\tag{16}
+\end{equation}
+Solving for \(t\),
+\begin{equation}
+\boxed{
+t=\frac18-c\,\Delta^2+O(\Delta^4).
+}
+\tag{17}
+\end{equation}
+
+\section{Step 7: Compute the required scaling of the bare mass \(m_0(\Delta)\)}
+
+We have
+\[
+m_0=-\log t.
+\]
+Substitute (17):
+\[
+t=\frac18\left(1-8c\,\Delta^2+O(\Delta^4)\right).
+\]
+Then
+\[
+m_0
+=
+-\log\left[\frac18\left(1-8c\,\Delta^2+O(\Delta^4)\right)\right]
+=
+\log 8
+-
+\log\left(1-8c\,\Delta^2+O(\Delta^4)\right).
+\]
+Use the expansion
+\[
+-\log(1-x)=x+\frac{x^2}{2}+O(x^3),
+\qquad x\to 0.
+\]
+Here \(x=8c\,\Delta^2+O(\Delta^4)\). Therefore
+\begin{equation}
+m_0
+=
+\log 8
++
+8c\,\Delta^2
++O(\Delta^4).
+\tag{18}
+\end{equation}
+So
+\begin{equation}
+\boxed{
+m_0(\Delta)
+=
+\log 8+8c\,\Delta^2+O(\Delta^4).
+}
+\tag{19}
+\end{equation}
+Equivalently,
+\begin{equation}
+\boxed{
+m_0(\Delta)=\log 8+O(\Delta^2).
+}
+\tag{20}
+\end{equation}
+
+\section{Step 8: Match to the continuum Euclidean propagator and identify the physical mass}
+
+Expand \(D(k)\) for small \(k\) and small \(\Delta\):
+\[
+D(k)=1-2t\sum_{\mu=1}^4\cos k_\mu.
+\]
+For small \(k\),
+\[
+\sum_{\mu=1}^4\cos k_\mu
+=
+4-\frac12 k^2+O(k^4),
+\qquad
+k^2=\sum_{\mu=1}^4 k_\mu^2.
+\]
+Using (17),
+\[
+2t\sum_{\mu=1}^4\cos k_\mu
+=
+2\left(\frac18-c\,\Delta^2\right)
+\left(4-\frac12 k^2\right)
++O(\Delta^4,k^4)
+=
+1-\frac18 k^2-8c\,\Delta^2+O(\Delta^4,k^4).
+\]
+Therefore
+\begin{equation}
+D(k)
+=
+1-\left(1-\frac18 k^2-8c\,\Delta^2+O(\Delta^4,k^4)\right)
+=
+\frac18 k^2+8c\,\Delta^2+O(\Delta^4,k^4).
+\tag{21}
+\end{equation}
+Rescale the momentum:
+\[
+k=\Delta p.
+\]
+Then
+\begin{equation}
+D(k)
+=
+\Delta^2\left(\frac18 p^2+8c\right)+O(\Delta^4).
+\tag{22}
+\end{equation}
+The lattice propagator becomes
+\[
+G(n)
+=
+\int_{-\pi}^{\pi}\frac{d^4k}{(2\pi)^4}\,
+\frac{e^{ik\cdot n}}{D(k)}
+\approx
+\int
+\frac{\Delta^4 d^4p}{(2\pi)^4}\,
+\frac{e^{ip\cdot x}}{
+\Delta^2\left(\frac18 p^2+8c\right)
+}.
+\]
+Simplifying,
+\begin{equation}
+G(n)
+\approx
+8\Delta^2
+\int
+\frac{d^4p}{(2\pi)^4}\,
+\frac{e^{ip\cdot x}}{
+p^2+64c
+}.
+\tag{23}
+\end{equation}
+The continuum Euclidean propagator for a scalar field of mass \(m\) is
+\begin{equation}
+D_E(x)
+=
+\int
+\frac{d^4p}{(2\pi)^4}\,
+\frac{e^{ip\cdot x}}{
+p^2+m^2
+}.
+\tag{24}
+\end{equation}
+Comparing (23) and (24), we identify
+\begin{equation}
+\boxed{
+m^2=64c.
+}
+\tag{25}
+\end{equation}
+Thus
+\[
+c=\frac{m^2}{64},
+\qquad
+8c=\frac{m^2}{8}.
+\]
+Substituting into (19),
+\begin{equation}
+\boxed{
+m_0(\Delta)
+=
+\log 8+\frac{m^2}{8}\Delta^2+O(\Delta^4).
+}
+\tag{26}
+\end{equation}
+The overall factor \(8\Delta^2\) in (23) is absorbed into the functional measure of the continuum path integral.
+
+\section*{Final answer}
+
+The lattice propagator is
+\[
+G(n)=\sum_{\text{paths }0\to n} t^{L(\text{path})},
+\qquad
+t=e^{-m_0}.
+\]
+It satisfies the recursion
+\[
+G(n)=\delta_{n,0}
++
+t\sum_{\mu=1}^4\bigl[G(n-e_\mu)+G(n+e_\mu)\bigr].
+\]
+Its exact Fourier representation is
+\[
+G(n)=
+\int_{-\pi}^{\pi}\frac{d^4k}{(2\pi)^4}\,
+\frac{e^{ik\cdot n}}{
+1-2t\sum_{\mu=1}^4\cos k_\mu
+}.
+\]
+At fixed \(m_0\), as \(\Delta\to 0\):
+\begin{itemize}
+    \item if \(m_0<\log 8\), the sum diverges;
+    \item if \(m_0\ge \log 8\), the sum is dominated by paths of length proportional to \(|n|\), and the propagator vanishes for fixed physical separation \(x\).
+\end{itemize}
+To keep long paths relevant in the continuum limit, the bare mass must be tuned as
+\[
+\boxed{
+m_0(\Delta)=\log 8+O(\Delta^2).
+}
+\]
+More precisely,
+\[
+\boxed{
+m_0(\Delta)
+=
+\log 8+\frac{m^2}{8}\Delta^2+O(\Delta^4),
+}
+\]
+where \(m\) is the physical mass. With this tuning, the lattice propagator becomes proportional to the continuum Euclidean propagator
+\[
+D_E(x)=\int\frac{d^4p}{(2\pi)^4}\frac{e^{ipx}}{p^2+m^2},
+\]
+up to an overall normalization factor absorbed into the functional measure.
+
+\subsection*{AI Use Declaration}
+
+\textbf{Model(s) used:} DeepSeek.
+
+\medskip
+\noindent\textbf{Revisions and corrections made to model output, and clarifications added:}
+\begin{enumerate}[label=\arabic*.]
+    \item In Step~1, the hypercubic lattice is now defined with full detail, including the physical coordinate \(x=\Delta n\). The first model output did not define the lattice details clearly.
+    \item In the model output, the recursion formula was introduced suddenly without explaining its origin. It is now fully justified in Step~2.
+    \item The model used the momentum interval \(k_\mu\in[-\pi,\pi]\) without explanation or justification. This is now justified in Step~3.
+    \item In the first version, convergence was not checked and its region was not determined. This is now explained in detail in Step~5.
+    \item In the first version, the model obtained the general form of \(m_0\) by jumping over several relations and details. In this version, it is derived in Steps~6 and~7 without skipping any details.
+    \item In the first version, the model did not show why the constant \(c\) in Eq.~(19) is chosen as \(m^2/64\). This is now shown explicitly in Step~8 by matching the general form with the Euclidean propagator.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Comparisons and checks against the lecture notes:}
+\begin{enumerate}[label=\arabic*.]
+    \item Choice of lattice paths: in the last paragraph of p.~56 and the first paragraph of p.~57, the lecture proposes the hypercubic lattice paths.
+    \item Definition of the recursion formula: the lecture defines a recursion formula on p.~58, Eq.~(7.3).This is a insight that define a recursion formula can help to derive the propagator 
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Calculation steps, limiting cases, and consistency checks verified by hand:}
+I did not use hand calculations for checking. I checked the logic and correctness of the reasoning by eye and by mental verification. The correctness of the steps and the coherence between steps were checked by mind and AI. I tried my best to avoid jumping between steps and relations without proving and justifying them.
+
+\medskip
+\noindent\textbf{Calculation steps, limiting cases, and consistency checks subjected to automated verification (via Mathematica, Python, LLMs):}
+I explained all edits in the ``Revisions and corrections'' part above. The consistency checks were done by eye and mind.
+
+\end{document}

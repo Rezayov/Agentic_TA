@@ -1,0 +1,205 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+\setlength{\headheight}{15pt}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{a4paper, margin=1in}
+\parskip=0.5\baselineskip
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\rightmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[R]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+\setcounter{secnumdepth}{3}
+
+\begin{document}
+
+\thispagestyle{empty}
+\begin{center}
+    \vspace*{1cm}
+
+    \IfFileExists{sharif-university-logo.png}{
+        \includegraphics[width=3cm]{sharif-university-logo.png}\\[0.5cm]
+    }{}
+
+    {\large \textbf{Sharif University of Technology}}
+    
+    {\large \textbf{Department of Physics}}\\[1.5cm]
+
+    \vspace{1.5cm}
+
+    {\Huge \textbf{QFT 1: Problem Set 1 }}\\[1.5cm]
+
+
+    \begin{tabular}{p{3cm} p{8cm}}
+        \textbf{Professor:} & Arash Arabi Ardehali  \\[0.5cm]
+        \textbf{Student:} & Abolfazl Balouch \\[0.5cm]
+        \textbf{E-mail:} & Balouch1381@gmail.com \\[0.5cm]
+    \end{tabular}
+    \vfill
+    {\large \today}
+\end{center}
+\newpage
+
+\section*{Problem}
+Consider a 4-dimensional hyper-cubic lattice with the lattice spacing \(\Delta\). Compute the ``lattice propagator'' as the sum over all lattice paths connecting the lattice points 0 and \(x\),
+\[
+\sum_{\text{lattice path } 0 \to x} e^{-m_0 L(\text{path})},
+\]
+where \(L(\text{path})\) is the number of links in the path. The path may go through a given link any number of times.
+
+Consider the limit \(\Delta \to 0\). Observe that at fixed \(m_0\) the sum either diverges, or is dominated by the shortest path from 0 to \(x\). Determine how \(m_0 = m_0(\Delta)\) should depend on \(\Delta\) for long paths to remain relevant in the limit \(\Delta \to 0\).
+
+Suggestion: follow the steps outlined in Lecture 7, with suitable modifications to take into account the lattice structure. The representation
+\[
+\delta_{n,0} = \int_{-\pi}^{\pi} \frac{dk}{2\pi} e^{ikn}
+\]
+of the Kronecker delta may be useful.
+
+\section*{Solution}
+Suppose point $x$ is on the lattice and $x=\Delta N$ ($N=(N_1,...,N_4)$ is the integer coordinates of the lattice. meaning that $N_\mu=\frac{x_\mu}{\Delta}$.) If \(C_\Delta(N)\) is the number of \(n\)-step paths from \(0\) to \(N\), we have:
+
+\begin{equation}
+G_\Delta(N) = \sum_{n=0}^{\infty} e^{-m_0 n} C_n(N).
+\label{eq1}
+\end{equation}
+
+In four dimensions, $\delta_{n,0} = \int_{-\pi}^{\pi} \frac{dk}{2\pi} e^{ikn}$ takes the form $\delta_{N,0} = \int_{-\pi}^{\pi} \frac{d^4k}{(2\pi)^4} e^{ik \cdot N}$. In one step, we can move in both the \(\hat{e}_\mu\)-direction and the \(-\hat{e}_\mu\)-direction, so the coefficient corresponding to one step in Fourier space is equal to \(e^{ik_\mu} + e^{-ik_\mu} \). The sum over the four directions is equal to
+
+\begin{equation}
+\sum_{\mu=1}^{4} \left( e^{i k \mu} + e^{-i k \mu} \right) = 2 \sum_{\mu=1}^{4} \cos k_\mu
+\label{eq2}
+\end{equation}
+
+Therefore, for \(n\) steps we have:
+
+\begin{equation}
+C_n(N) = \int_{-\pi}^{\pi} \frac{d^4 k}{(2\pi)^4}\,
+e^{-i k \cdot N}
+\left( 2 \sum_{\mu=1}^{4} \cos k_\mu \right)^n
+\label{eq3}
+\end{equation}
+
+Substituting Equation \eqref{eq3} into Equation \eqref{eq1}, we obtain:
+
+\begin{equation}
+G_\Delta(N)
+=
+\int_{-\pi}^{\pi}
+\frac{d^4k}{(2\pi)^4}\,
+e^{-i k\cdot N}
+\sum_{n=0}^{\infty}
+\left[
+e^{-m_0}\,
+2 \sum_{\mu=1}^{4} \cos k_\mu
+\right]^n
+\label{eq4}
+\end{equation}
+
+We use the geometric series.($\sum_{n=0}^{\infty} r^n = \frac{1}{1-r}$)
+
+\begin{equation}
+G_\Delta(N)
+=
+\int_{-\pi}^{\pi}
+\frac{d^4 k}{(2\pi)^4}\,
+\frac{e^{-i k\cdot N}}
+{1 - 2 e^{-m_0} \sum_{\mu=1}^{4} \cos k_\mu}
+\label{eq5}
+\end{equation}
+
+To see continuum physics, we need to look at small momenta (\(k_\mu \ll 1\) because $p_\mu=\frac{k_\mu}{\Delta}$ and $p_\mu$ is finite therefor when $ \Delta \rightarrow 0 \Rightarrow k_\mu  \rightarrow 0$):
+
+\begin{equation}
+\cos k_\mu = 1 - \frac{k_\mu^2}{2} + \frac{k_\mu^4}{24} + \cdots \Rightarrow 2\cos k_\mu = 2 - k_\mu^2 + O(k_\mu^4)
+\label{eq6}
+\end{equation}
+
+Summing over the four dimensions:
+
+\begin{equation}
+2\sum_{\mu=1}^4 \cos k_\mu = 8 - k^2 + O(k^4) \quad ,(k^2 = \sum_{\mu=1}^4 k_\mu^2)
+\label{eq7}
+\end{equation}
+
+So the denominator of Equation \eqref{eq5} becomes as follows:
+
+\begin{equation}
+1 - 8e^{-m_0} + e^{-m_0} k^2 + O(k^4)
+\label{eq8}
+\end{equation}
+
+We need to bring the denominator into the familiar form $\frac{1}{p^2+m^2}$. ($p_\mu=\frac{k_\mu}{\Delta} \Rightarrow k_\mu=\Delta p_\mu \Rightarrow k^2=\Delta^2p^2$) Also, from Equation \eqref{eq8} we see that the coefficient of \(p^2\) must be \(e^{-m_0}\Delta\); therefore:
+
+\begin{equation}
+\begin{split}
+1-8e^{-m_0}+e^{-m_0}\Delta^2p^2
+=
+e^{-m_0}\Delta^2(p^2+m^2) \Rightarrow 1-8e^{-m_0}=e^{-m_0}m^2\Delta^2 \\
+\Rightarrow e^{m_0}-8=m^2\Delta^2 \Rightarrow e^{m_0}=8+m^2\Delta^2 \Rightarrow \boxed{
+m_0(\Delta)=\ln(8+m^2\Delta^2).
+}
+\label{eq9}
+\end{split} 
+\end{equation}
+
+We write Equation \eqref{eq9} in the following form:
+
+\begin{equation}
+m_0 = \ln 8 + \ln\left(1+\frac{m^2\Delta^2}{8}\right)
+\label{eq10}
+\end{equation}
+
+For $\Delta \rightarrow 0$ Using $ \ln(1+\epsilon)=\epsilon-\frac{\epsilon^2}{2}+\cdots$, we thus obtain:
+
+\begin{equation}
+\boxed{\boxed{
+m_0(\Delta)
+=
+\ln 8+\frac{m^2}{8}\Delta^2+O(\Delta^4)
+}}
+\label{eq11}
+\end{equation}
+
+\newpage
+\subsection*{AI use declaration}
+Model(s) used: 
+
+ChatGPT (GPT-5.6)\\
+
+Revisions/corrections made to model output, and clarifications added:
+
+I didn't give the full question to the AI, but I used it in the solution process. For writing the LaTeX code, the parts I used from it in the conceptual process of the question are $K_\mu=p_\mu/\Delta$ and generally concepts related to lattices.\\
+
+Comparisons/checks against the lecture notes:
+
+Before reading the question, I thoroughly reviewed the lecture notes, performed all intermediate calculations, and wrote the question based on that.\\
+
+Calculation steps, limiting cases, or consistency checks verified by hand:
+
+Since this problem did not involve complex calculations, I handled all the calculations myself.
+
+Calculation steps, limiting cases, or consistency checks subjected to automated verification (via Mathematica, python, LLMs):
+
+As I said above I didn't give the full question to the AI, but I used it in the solution process. For writing the LaTeX code, the parts I used from it in the conceptual process of the question are $K_\mu=p_\mu/\Delta$ and generally concepts related to lattices.\\
+
+
+
+
+
+\end{document}

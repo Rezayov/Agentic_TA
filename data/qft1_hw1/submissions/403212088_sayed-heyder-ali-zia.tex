@@ -1,0 +1,580 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\setlength{\emergencystretch}{2em}
+\numberwithin{equation}{section}
+
+\title{Continuum Scaling of the Link Weight\\
+in a Four-Dimensional Lattice Path Sum}
+\author{Sayed Heyder Ali Zia}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Question and scope}
+
+We consider an infinite four-dimensional Euclidean
+hypercubic lattice with spacing $\Delta$. We assign to
+each path $\gamma$ from the origin to a lattice point
+$x$ the weight
+\begin{equation}
+    w(\gamma)=e^{-m_0L(\gamma)},
+\end{equation}
+where we use $L(\gamma)$ for the number of links in
+the path.
+
+We seek the dependence $m_0=m_0(\Delta)$ that keeps
+long paths relevant as $\Delta\to0$. We focus on this
+dependence rather than on evaluating the full propagator.
+
+\section{Assumptions and notation}
+
+We make the following assumptions:
+\begin{enumerate}[label=(\roman*)]
+    \item We work on an infinite Euclidean lattice.
+    \item We allow only nearest-neighbour steps.
+    \item We allow backtracking, repeated sites,
+    repeated links, and self-intersections.
+    \item We count different ordered sequences of
+    steps as different paths.
+    \item We assign equal weights to all directions.
+    \item We sum over all finite path lengths,
+    including the zero-link path at the origin.
+    \item We keep the physical endpoint separation
+    fixed as we take the continuum limit.
+\end{enumerate}
+
+We write the lattice sites as
+\begin{equation}
+    x=\Delta n,
+    \qquad
+    n=(n_1,n_2,n_3,n_4)\in\mathbb Z^4.
+\end{equation}
+We distinguish the physical position $x$ from the
+dimensionless integer coordinate $n$.
+
+More precisely, we take a sequence of lattice points
+$x_\Delta=\Delta n_\Delta$ approaching a fixed continuum
+point $x$. We suppress the additional subscript when
+it causes no ambiguity.
+
+We denote the number of links by $N$ and the physical
+length by $\ell$:
+\begin{equation}
+    N=L(\gamma),
+    \qquad
+    \ell=N\Delta.
+\end{equation}
+Since $N$ is dimensionless, we identify $m_0$ as a
+dimensionless cost per link. We reserve $m$ for the
+continuum mass, which has dimensions of inverse length.
+
+We use units $\hbar=c=1$. We adopt the prescribed
+Euclidean weight as the physical input:
+\begin{equation}
+    A(\gamma)=m_0N,
+    \qquad
+    w(\gamma)=e^{-A(\gamma)}.
+\end{equation}
+
+We take $m_0$ to be real and seek a stable continuum
+limit with $m^2\geq0$.
+
+\section{Path counting and the residual length weight}
+
+We denote the four coordinate unit vectors by
+$e_\mu$, with $\mu=1,2,3,4$. In lattice units, we
+choose each step from
+\begin{equation}
+    \{\pm e_1,\pm e_2,\pm e_3,\pm e_4\}.
+\end{equation}
+We therefore have eight possible directions at every
+step.
+
+If we do not restrict the endpoint, we count $8^N$
+paths with $N$ links. We obtain the total weight
+\begin{equation}
+    8^Ne^{-m_0N}
+    =
+    e^{-(m_0-\ln8)N}.
+\end{equation}
+
+We define
+\begin{equation}
+    \delta(\Delta)=m_0(\Delta)-\ln8,
+    \qquad
+    q(\Delta)=8e^{-m_0(\Delta)}=e^{-\delta(\Delta)}.
+    \label{eq:delta}
+\end{equation}
+We interpret $\delta$ as the residual cost per step
+after accounting for the exponential number of paths.
+
+We now let $C_N(n)$ denote the number of $N$-step
+paths from the origin to the specified endpoint $n$.
+We write
+\begin{equation}
+    \mathcal G_\Delta(\Delta n;m_0)
+    =
+    \sum_{N=0}^{\infty}C_N(n)e^{-m_0N}.
+\end{equation}
+
+We introduce
+\begin{equation}
+    P_N(n)=\frac{C_N(n)}{8^N}.
+\end{equation}
+We use $P_N(n)$ as a counting tool: we recognize it
+as the endpoint probability for an unbiased walk
+whose eight step directions each have probability
+$1/8$.
+
+We obtain the exact rewriting
+\begin{equation}
+    \boxed{
+    \mathcal G_\Delta(\Delta n;m_0)
+    =
+    \sum_{N=0}^{\infty}q^NP_N(n).
+    }
+    \label{eq:walksum}
+\end{equation}
+
+We have separated the endpoint constraint, contained
+in $P_N(n)$, from the additional suppression of long
+paths, contained in $q^N$.
+
+\section{Critical value and convergence}
+
+We identify the critical value
+\begin{equation}
+    \boxed{m_{0,c}=\ln8.}
+\end{equation}
+
+For fixed lattice endpoint $n$, we use the large-$N$
+estimate
+\begin{equation}
+    P_N(n)\sim cN^{-2},
+    \qquad c>0,
+\end{equation}
+along the allowed parity subsequence.
+
+We understand the power $N^{-2}$ from diffusion:
+we spread over distances of order $\sqrt N$ in
+four directions and therefore over a volume of
+order $(\sqrt N)^4=N^2$.
+
+We must respect the parity restriction
+\begin{equation}
+    N\equiv\sum_{\mu=1}^{4}n_\mu\pmod2.
+\end{equation}
+We obtain no paths for the opposite parity because
+each step changes the parity of the sum of the
+coordinates.
+
+We distinguish three cases:
+\begin{enumerate}
+    \item For $m_0<\ln8$, we have $q>1$. We obtain
+    exponential growth that overwhelms the
+    power-law decay of $P_N(n)$, so the sum diverges.
+
+    \item For $m_0>\ln8$, we have $q<1$. We obtain
+    exponential suppression of long paths and a
+    convergent sum.
+
+    \item For $m_0=\ln8$, we have $q=1$. We still
+    obtain a finite fixed-endpoint sum in four
+    dimensions because $\sum_NN^{-2}$ converges.
+\end{enumerate}
+
+We therefore retain $m_0=\ln8$ as an exception to
+the statement that every fixed value leads either
+to divergence or to the suppression of long-path
+continuum behaviour.
+
+We also distinguish convergence at one endpoint
+from convergence after summing over every endpoint.
+At criticality, we have
+\begin{equation}
+    \sum_n\mathcal G_\Delta(\Delta n;\ln8)
+    =
+    \sum_{N=0}^{\infty}\sum_nP_N(n)
+    =
+    \sum_{N=0}^{\infty}1
+    =
+    \infty.
+\end{equation}
+
+\section{The meaning of long paths}
+
+We first consider a shortest path to $n$. We need
+\begin{equation}
+    N_{\min}=\sum_{\mu=1}^{4}|n_\mu|
+\end{equation}
+links.
+
+At fixed nonzero physical separation, we have
+$N_{\min}\sim\Delta^{-1}$. We therefore cannot
+characterize the desired regime merely by saying
+that $N$ becomes large: even a shortest path has
+infinitely many links in the continuum limit.
+
+We instead seek fluctuating paths on the diffusive
+scale. We write their displacement after $N$
+unbiased steps as
+\begin{equation}
+    X_N=\Delta\sum_{j=1}^{N}s_j.
+\end{equation}
+We have
+\begin{equation}
+    \langle s_j\rangle=0,
+    \qquad
+    |s_j|^2=1,
+    \qquad
+    \langle s_j\cdot s_k\rangle=0
+    \quad(j\neq k).
+\end{equation}
+We consequently obtain
+\begin{equation}
+    \langle |X_N|^2\rangle=N\Delta^2.
+\end{equation}
+
+We identify the scale on which a fluctuating walk
+explores a finite physical distance as
+\begin{equation}
+    \boxed{
+    N\Delta^2=\text{finite},
+    \qquad
+    N\sim\Delta^{-2}.
+    }
+    \label{eq:diffusion}
+\end{equation}
+We use this relation as a scaling statement, not as
+a claim that every contributing path has the same
+length.
+
+We also find
+\begin{equation}
+    \ell=N\Delta\sim\Delta^{-1}.
+\end{equation}
+We therefore allow divergent microscopic path
+lengths while keeping the endpoints a finite
+physical distance apart.
+
+For fixed $m_0>\ln8$, we can make the loss of
+finite-distance propagation explicit. Since
+$P_N(n)\leq1$ and $q<1$, we have
+\begin{equation}
+    0\leq\mathcal G_\Delta(\Delta n;m_0)
+    \leq
+    \sum_{N=N_{\min}}^\infty q^N
+    =
+    \frac{q^{N_{\min}}}{1-q}.
+\end{equation}
+We obtain exponential decay as $\Delta\to0$ at
+fixed nonzero separation.
+
+We do not infer that exactly shortest paths alone
+contribute. We regard the shortest-path wording
+as a heuristic description, since longer paths
+can have substantial multiplicity.
+
+\section{Dependence of $m_0$ on $\Delta$}
+
+We retain from \eqref{eq:walksum} the residual
+length factor
+\begin{equation}
+    q^N=e^{-\delta(\Delta)N}.
+    \label{eq:residual}
+\end{equation}
+
+We consider the diffusive limit
+\begin{equation}
+    N\Delta^2\longrightarrow u,
+    \qquad 0<u<\infty.
+    \label{eq:u}
+\end{equation}
+
+We rewrite the exponent as
+\begin{equation}
+    \delta(\Delta)N
+    =
+    \frac{\delta(\Delta)}{\Delta^2}
+    \bigl(N\Delta^2\bigr).
+    \label{eq:exponent}
+\end{equation}
+
+We obtain a definite finite limiting suppression
+by requiring
+\begin{equation}
+    \frac{\delta(\Delta)}{\Delta^2}
+    \longrightarrow\alpha,
+    \qquad 0\leq\alpha<\infty.
+    \label{eq:alpha}
+\end{equation}
+
+We then find
+\begin{equation}
+    q^N\longrightarrow e^{-\alpha u}.
+    \label{eq:finiteweight}
+\end{equation}
+
+Since $\delta(\Delta)=m_0(\Delta)-\ln8$, we obtain
+\begin{equation}
+    \boxed{
+    m_0(\Delta)
+    =
+    \ln8+\alpha\Delta^2+o(\Delta^2),
+    \qquad \alpha\geq0.
+    }
+    \label{eq:main}
+\end{equation}
+
+\subsection{Explanation of Equation \eqref{eq:main}}
+
+We obtain \eqref{eq:main} directly from the limit
+in \eqref{eq:alpha}. We can express that limit by
+writing
+\[
+    \frac{\delta(\Delta)}{\Delta^2}
+    =
+    \alpha+r(\Delta),
+    \qquad
+    r(\Delta)\longrightarrow0.
+\]
+We multiply by $\Delta^2$:
+\[
+    \delta(\Delta)
+    =
+    \alpha\Delta^2+\Delta^2r(\Delta).
+\]
+We denote $\Delta^2r(\Delta)$ by $o(\Delta^2)$
+because its ratio to $\Delta^2$ vanishes. We then
+substitute $\delta=m_0-\ln8$ and obtain
+\eqref{eq:main}.
+
+We can also understand the result physically.
+We have $N\sim\Delta^{-2}$ for the long fluctuating
+paths of interest. We therefore require the
+residual cost per link to be of order $\Delta^2$,
+so that its product with the number of links
+remains finite.
+
+We assign $\alpha$ dimensions of inverse length
+squared. We consequently keep
+$\alpha\Delta^2$ dimensionless, consistently with
+the dimensions of $m_0$.
+
+We additionally require
+$m_0(\Delta)\geq\ln8$ at sufficiently small finite
+spacing. We cannot approach the critical value
+from below while retaining the unrestricted
+positive path sum, because the sum would diverge
+at each such spacing.
+
+\subsection{Identification of the continuum mass}
+
+We identify the coefficient $\alpha$ using the
+one-step momentum dependence.
+
+We let $p$ denote physical Euclidean momentum and
+define
+\begin{equation}
+    \varphi_\Delta(p)
+    =
+    \left\langle e^{ip\cdot\Delta s}\right\rangle
+    =
+    \frac18\sum_{\mu=1}^{4}
+    \left(e^{i\Delta p_\mu}
+    +e^{-i\Delta p_\mu}\right).
+\end{equation}
+We use
+$p\cdot x=\sum_{\mu=1}^{4}p_\mu x_\mu$ and
+$p^2=\sum_{\mu=1}^{4}p_\mu^2$.
+
+We expand at fixed $p$:
+\begin{equation}
+    \varphi_\Delta(p)
+    =
+    \frac14\sum_{\mu=1}^{4}\cos(\Delta p_\mu)
+    =
+    1-\frac{\Delta^2p^2}{8}
+    +O(\Delta^4|p|^4).
+\end{equation}
+
+We combine this factor with the residual
+length weight:
+\begin{equation}
+    \log\left(q^N\varphi_\Delta(p)^N\right)
+    =
+    -N\delta(\Delta)
+    +N\log\varphi_\Delta(p).
+\end{equation}
+
+Using $N\Delta^2\to u$ and
+$\delta(\Delta)=\alpha\Delta^2+o(\Delta^2)$, we obtain
+\begin{equation}
+    q^N\varphi_\Delta(p)^N
+    \longrightarrow
+    \exp\left[-u\left(\alpha+\frac{p^2}{8}\right)\right].
+\end{equation}
+We have discarded terms proportional to
+$N\Delta^4$, which vanish because
+$N\Delta^4=(N\Delta^2)\Delta^2\to0$.
+
+We define the proper-time parameter
+\begin{equation}
+    s=\frac{u}{8}
+    =
+    \lim_{\Delta\to0}\frac{N\Delta^2}{8}.
+\end{equation}
+We then write the limiting factor as
+\begin{equation}
+    e^{-s(p^2+8\alpha)}.
+\end{equation}
+
+We identify the continuum mass through
+\begin{equation}
+    m^2=8\alpha.
+\end{equation}
+We therefore obtain
+\begin{equation}
+    \boxed{
+    m_0(\Delta)
+    =
+    \ln8+\frac{m^2\Delta^2}{8}+o(\Delta^2).
+    }
+    \label{eq:mass}
+\end{equation}
+
+We identify $s$ as a parameter with dimensions
+of length squared. We distinguish it from both
+the link count $N$ and the physical path length
+$N\Delta$.
+
+We may choose
+\begin{equation}
+    m_0(\Delta)=\ln(8+m^2\Delta^2)
+\end{equation}
+as one function satisfying \eqref{eq:mass}.
+We do not require this particular finite-spacing
+choice; we require its asymptotic behaviour.
+
+\subsection{Limiting cases}
+
+We distinguish the following possibilities:
+\begin{enumerate}
+    \item If
+    $\delta(\Delta)/\Delta^2\to+\infty$,
+    we suppress paths with any fixed positive
+    value of $N\Delta^2$. We lose the desired
+    finite-mass diffusive limit.
+
+    \item If
+    $\delta(\Delta)/\Delta^2\to\alpha>0$,
+    we retain long paths with finite suppression.
+    We obtain a finite positive mass squared
+    $m^2=8\alpha$.
+
+    \item If
+    $\delta(\Delta)/\Delta^2\to0$ with
+    $\delta(\Delta)\geq0$,
+    we retain the diffusive regime without a
+    residual mass suppression. We obtain the
+    massless scaling limit.
+
+    \item If $\delta(\Delta)<0$, we encounter
+    a divergent unrestricted path sum at that
+    spacing.
+\end{enumerate}
+
+We therefore require both an approach to the
+critical value and control over the rate of that
+approach. We cannot determine the continuum
+behaviour from $m_0(\Delta)\to\ln8$ alone.
+
+\section{Final result}
+
+We find the general finite-suppression scaling
+\begin{equation}
+    \boxed{
+    m_0(\Delta)-\ln8
+    =
+    \alpha\Delta^2+o(\Delta^2),
+    \qquad \alpha\geq0,
+    }
+\end{equation}
+with $m_0(\Delta)\geq\ln8$ at sufficiently small
+finite spacing.
+
+For a specified continuum mass $m$, we write
+\begin{equation}
+    \boxed{
+    m_0(\Delta)
+    =
+    \ln8+\frac{m^2\Delta^2}{8}+o(\Delta^2).
+    }
+\end{equation}
+
+We interpret $\ln8$ as the compensation for the
+exponential number of available walks. We
+interpret the correction of order $\Delta^2$
+as the residual suppression that remains finite
+for paths with $N\sim\Delta^{-2}$.
+
+We retain $m_0=\ln8$ as the critical massless
+case. We also retain the distinction between
+the survival of long-path contributions and
+the separate normalization of a continuum
+propagator.
+
+\subsection*{AI use declaration}
+
+\textbf{Model(s) used:}
+We used ChatGPT (Codex; the exact underlying model
+version was not available in the conversation).\\
+
+\textbf{Revisions/corrections made to model output,
+and clarifications added:}
+We made many revisions and clarifications,
+including the distinction between link count
+and physical length, the dimensions of $m_0$,
+the fixed-separation continuum limit, the
+critical exception $m_0=\ln8$, the interpretation
+of long paths, the qualification of
+shortest-path domination, and the derivation
+of Equation~\eqref{eq:main}.\\
+
+\textbf{Comparisons/checks against the lecture notes:}
+We made two comparisons with the relativistic
+path-integral discussion in Chapter~6,
+printed pages~52--55:
+(1) the cancellation between path multiplicity
+and the exponential length weight;
+(2) the diffusive scaling in which the number
+of steps times the squared step length remains
+finite. We accounted for the different
+conventions for link count and physical length.\\
+
+\textbf{Calculation steps, limiting cases, or
+consistency checks verified by hand:}
+We report one independent hand check.
+
+\textbf{Calculation steps, limiting cases, or
+consistency checks subjected to automated
+verification (via Mathematica, Python, LLMs):}
+We used one LLM-assisted review of the scaling
+argument and its algebraic consistency.
+We did not perform an independent Mathematica
+or Python verification.
+
+\end{document}

@@ -1,0 +1,30 @@
+{
+  "submission": {
+    "question_id": "algebra-1",
+    "question": "Solve 2x + 3 = 11 and justify each transformation.",
+    "answer": "Subtracting 3 from both sides gives 2x = 8. Dividing both sides by 2 gives x = 4."
+  },
+  "rubric": {
+    "title": "Linear equation rubric",
+    "criteria": [
+      {
+        "criterion_id": "method",
+        "description": "Uses equality-preserving transformations.",
+        "max_points": 2
+      },
+      {
+        "criterion_id": "result",
+        "description": "Obtains the correct solution.",
+        "max_points": 1
+      }
+    ]
+  },
+  "source_material": [
+    {
+      "source_id": "textbook-1",
+      "location": "Section 2.1",
+      "content": "An equation remains equivalent when the same quantity is added to or subtracted from both sides, or both sides are divided by the same nonzero quantity."
+    }
+  ]
+}
+
