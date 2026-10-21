@@ -24,5 +24,8 @@ uv run homework-ta-prepare \
 uv run --env-file .env homework-ta \
   data/qft1_hw1/work/403200498.json \
   --reference-db data/qft1_hw1/indexes/references.sqlite3 \
-  --output data/qft1_hw1/outputs/403200498.json
+  --original-answer data/qft1_hw1/submissions/403200498.tex
 ```
+
+Checked homework and professor notes go to the project `outputs/403200498/`.
+See the [user manual](../../docs/USER_MANUAL.md) for the all-student batch command.

@@ -77,7 +77,9 @@ def _apply_character_budget(
     for excerpt in excerpts:
         size = len(excerpt.content)
         if size > budget - used:
-            continue
+            # Retrieval results are ranked. Do not let a lower-ranked, shorter
+            # passage displace a higher-ranked passage that did not fit.
+            break
         selected.append(excerpt)
         used += size
     return tuple(selected)

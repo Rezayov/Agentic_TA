@@ -246,3 +246,33 @@ class GradeReport(StrictModel):
     verifier: ScoredAssessment
     reconciliation: ReconciliationResult
     feedback: StudentFeedback | None
+
+
+class ReviewSection(StrictModel):
+    section_id: str
+    title: str
+    criterion_ids: tuple[str, ...]
+
+
+class SectionReview(StrictModel):
+    section_id: str
+    summary: str = Field(min_length=1, max_length=220)
+    questions: tuple[str, ...] = Field(default=(), max_length=2)
+
+    @model_validator(mode="after")
+    def short_questions(self) -> "SectionReview":
+        if any(not question or len(question) > 180 for question in self.questions):
+            raise ValueError("review questions must contain 1 to 180 characters")
+        return self
+
+
+class InstructorReview(StrictModel):
+    overall_summary: str = Field(min_length=1, max_length=450)
+    bottleneck_questions: tuple[str, ...] = Field(max_length=4)
+    sections: tuple[SectionReview, ...]
+
+    @model_validator(mode="after")
+    def bounded_questions(self) -> "InstructorReview":
+        if any(not question or len(question) > 180 for question in self.bottleneck_questions):
+            raise ValueError("bottleneck questions must contain 1 to 180 characters")
+        return self

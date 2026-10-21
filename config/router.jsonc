@@ -4,14 +4,28 @@
   "retry_delay_seconds": 1,
   "providers": [
     {
-      "name": "gcat",
+      "name": "g-cat",
       "base_url": "https://core.g-cat.ir/v1",
       "api_key_env": "GCAT_API_KEY",
       "timeout_seconds": 120,
       "send_temperature": false,
       "stream": true,
       "response_format": "prompt",
-      "max_tokens": 16384,
+      "max_tokens": 32768,
+      "max_response_bytes": 10000000,
+      "models": [
+        "agy/gemini-3.8-flash-high",
+        "cx/gpt-6-luna-medium"
+      ]
+    },{
+      "name": "gcat",
+      "base_url": "https://core.gcat.ir/v1",
+      "api_key_env": "GCAT_API_KEY",
+      "timeout_seconds": 120,
+      "send_temperature": false,
+      "stream": true,
+      "response_format": "prompt",
+      "max_tokens": 32768,
       "max_response_bytes": 10000000,
       "models": [
         "agy/gemini-3.8-flash-high",

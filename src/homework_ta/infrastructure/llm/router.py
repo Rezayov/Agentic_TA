@@ -3,6 +3,7 @@
 import json
 import logging
 import os
+import re
 import time
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -10,7 +11,7 @@ from typing import Any
 
 from jsonschema import ValidationError, validate
 
-from homework_ta.application.ports.llm import LLMRequest, LLMResponse
+from homework_ta.application.ports.llm import ChatMessage, LLMRequest, LLMResponse
 from homework_ta.config import (
     MAX_PROVIDER_CONFIG_BYTES,
     ProviderConfig,
@@ -19,9 +20,17 @@ from homework_ta.config import (
     _strip_jsonc_comments,
 )
 from homework_ta.infrastructure.llm.openai_compatible import ProviderError
-from homework_ta.observability import log_event
+from homework_ta.observability import completion_progress, log_event
 
 LOGGER = logging.getLogger("homework_ta.router")
+
+
+class InvalidCompletionError(ProviderError):
+    """Safe diagnostics for locally rejected responses, without response content."""
+
+    def __init__(self, reason: str, **details: Any) -> None:
+        super().__init__(reason)
+        self.details = {"reason": reason, **details}
 
 
 @dataclass(frozen=True)
@@ -68,7 +77,7 @@ class RouterConfig:
             if not isinstance(entry, dict):
                 raise ValueError("each provider must be an object")
             name = entry.get("name")
-            if not isinstance(name, str) or not name.isidentifier() or len(name) > 50:
+            if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]{0,49}", name):
                 raise ValueError("provider name must be a short identifier")
             if "models" in entry and "model" in entry:
                 raise ValueError("use either model or models, not both")
@@ -154,10 +163,28 @@ class LiteLLMRouter:
                 self._index += 1
                 self._model_index = 0
                 continue
+            retry_request = request
             for attempt in range(1, self.config.failure_threshold + 1):
+                log_event(
+                    LOGGER,
+                    logging.INFO,
+                    "provider_request_started",
+                    provider=route.name,
+                    model=route.provider.model,
+                    schema_name=request.schema_name,
+                    attempt=attempt,
+                    attempt_limit=self.config.failure_threshold,
+                )
                 try:
-                    response = litellm.completion(**self._parameters(route, request))
-                    result = self._read_response(response, route, request)
+                    with completion_progress(
+                        LOGGER,
+                        provider=route.name,
+                        model=route.provider.model,
+                        schema_name=request.schema_name,
+                        attempt=attempt,
+                    ):
+                        response = litellm.completion(**self._parameters(route, retry_request))
+                        result = self._read_response(response, route, request)
                     log_event(
                         LOGGER,
                         logging.INFO,
@@ -179,8 +206,24 @@ class LiteLLMRouter:
                         schema_name=request.schema_name,
                         attempt=attempt,
                         error_type=type(exc).__name__,
+                        http_status=getattr(exc, "status_code", None),
+                        response_diagnostics=(
+                            exc.details if isinstance(exc, InvalidCompletionError) else None
+                        ),
                     )
                     if attempt < self.config.failure_threshold:
+                        if isinstance(exc, InvalidCompletionError):
+                            retry_request = self._correction_request(request, exc)
+                            log_event(
+                                LOGGER,
+                                logging.INFO,
+                                "router_correction_requested",
+                                provider=route.name,
+                                model=route.provider.model,
+                                schema_name=request.schema_name,
+                                reason=exc.details["reason"],
+                                path=exc.details.get("path"),
+                            )
                         time.sleep(self.config.retry_delay_seconds)
             log_event(
                 LOGGER,
@@ -198,6 +241,29 @@ class LiteLLMRouter:
             "all configured providers failed or were unavailable; inspect router logs"
         )
 
+    @staticmethod
+    def _correction_request(request: LLMRequest, error: InvalidCompletionError) -> LLMRequest:
+        project_prompt = Path(__file__).resolve().parents[4] / "prompts" / "router_retry.md"
+        packaged_prompt = Path(__file__).resolve().parents[2] / "prompts" / "router_retry.md"
+        prompt = (project_prompt if project_prompt.is_file() else packaged_prompt).read_text(
+            encoding="utf-8"
+        )
+        # Only rule names and field positions, never rejected content or assessor conclusions.
+        diagnostics = {
+            key: error.details[key]
+            for key in ("reason", "validator", "path", "finish_reason")
+            if key in error.details
+        }
+        return replace(
+            request,
+            messages=(
+                *request.messages,
+                ChatMessage(
+                    role="user", content=prompt + "\n" + json.dumps(diagnostics, ensure_ascii=False)
+                ),
+            ),
+        )
+
     def _parameters(self, route: Route, request: LLMRequest) -> dict[str, Any]:
         provider = route.provider
         parameters: dict[str, Any] = {
@@ -209,7 +275,7 @@ class LiteLLMRouter:
             "num_retries": 0,
             "stream": provider.stream,
         }
-        if provider.response_format == "json_schema":
+        if request.response_schema is not None and provider.response_format == "json_schema":
             parameters["response_format"] = {
                 "type": "json_schema",
                 "json_schema": {
@@ -218,7 +284,7 @@ class LiteLLMRouter:
                     "schema": request.response_schema,
                 },
             }
-        elif provider.response_format == "json_object":
+        elif request.response_schema is not None and provider.response_format == "json_object":
             parameters["response_format"] = {"type": "json_object"}
         if provider.send_temperature:
             parameters["temperature"] = request.temperature
@@ -247,16 +313,38 @@ class LiteLLMRouter:
                 content = message.content or ""
                 size += len(part.model_dump_json().encode("utf-8"))
                 if size > route.provider.max_response_bytes:
-                    raise ProviderError("completion exceeds configured response limit")
+                    raise InvalidCompletionError("response_size_limit", response_bytes=size)
                 pieces.append(content)
         finally:
             if route.provider.stream and hasattr(response, "close"):
                 response.close()
         content = "".join(pieces)
         if finish != "stop" or not content.strip():
-            raise ProviderError("completion is empty, truncated, or incomplete")
-        try:
-            validate(json.loads(content), request.response_schema)
-        except (ValueError, ValidationError) as exc:
-            raise ProviderError("completion does not satisfy the requested JSON schema") from exc
+            raise InvalidCompletionError(
+                "incomplete_completion", finish_reason=finish, content_characters=len(content)
+            )
+        if request.response_schema is not None:
+            # Accept a complete presentation wrapper, never extract/repair partial JSON.
+            fence = re.fullmatch(
+                r"```(?:json)?[ \t]*\r?\n(.*?)\r?\n```", content.strip(), re.DOTALL
+            )
+            if fence:
+                content = fence[1].strip()
+            try:
+                payload = json.loads(content)
+            except ValueError as exc:
+                raise InvalidCompletionError(
+                    "invalid_json",
+                    content_characters=len(content),
+                    fenced=content.lstrip().startswith("```"),
+                ) from exc
+            try:
+                validate(payload, request.response_schema)
+            except ValidationError as exc:
+                raise InvalidCompletionError(
+                    "schema_mismatch",
+                    validator=exc.validator,
+                    path=list(exc.absolute_path),
+                    content_characters=len(content),
+                ) from exc
         return LLMResponse(content=content, model=model)

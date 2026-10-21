@@ -1,5 +1,10 @@
 # Homework TA
 
+For current operating commands, see the [User manual](docs/USER_MANUAL.md).
+Student artifacts now default to the project `outputs/<student-number>/` directory.
+Use `homework-ta-batch` to run a shared assignment for the whole class. Older test
+paths below describe historical artifacts.
+
 A mathematical homework assistant that produces two independent, evidence-backed assessments
 and uses deterministic Python rules to decide whether the result can be approved automatically.
 The project prioritizes traceability, conservative review, and maintainable code.
@@ -312,7 +317,9 @@ an `outputs/` path. Processing every question in one file is not automatic.
 | `homework-ta-index` | `database reference [reference ...]`; optional `--chunk-characters` (default 2,400). |
 | `homework-ta` | `input`; optional `--output`, `--reference-db`, `--retrieval-limit`, `--log-file`, `--base-url`, `--model`, `--prompts-dir`. |
 
-Grading defaults to `grade-report.json`, `logs/homework-ta.jsonl`, and eight retrieval hits.
+Grading defaults to two artifacts in `outputs/<student-id>/`, `logs/homework-ta.jsonl`,
+and eight retrieval hits. `--output-dir` changes the artifact root; `--output` optionally
+exports an additional JSON audit report outside the student folder.
 Without `--reference-db`, only manual `source_material` is used. Each command supports `--help`.
 
 ## Reference retrieval and citations
@@ -476,7 +483,7 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
-The last verified suite has 45 passing tests: approved feedback, review routing, verifier isolation,
+The last verified suite has 91 passing tests: approved feedback, review routing, verifier isolation,
 shared retrieval, quote catalogs, invalid citations, streaming/retries, settings, original-file
 protection, and privacy-oriented logs. These local checks need no live API and do not establish
 mathematical accuracy or remote-service availability.
@@ -502,7 +509,7 @@ source .env
 set +a
 uv run homework-ta data/qft1_hw1/work/403200498.json \
   --reference-db data/qft1_hw1/work/textbooks.sqlite3 \
-  --output-dir data/qft1_hw1/outputs
+  --output-dir outputs
 ```
 
 The ordered configuration selects GCAT first, trying `agy/gemini-3.8-flash-high`
@@ -549,17 +556,18 @@ Each completed run writes:
 
 ```text
 outputs/<student-number>/
-  grade-report.json
-  ta-notes.txt
-  annotated-answer.tex
+  <student-number>_checked.tex
+  <student-number>_notes.md
 ```
 
 Use `--output-dir` to choose the output root. A submission ID such as
 `403200498_name` selects `403200498`; other safe IDs are retained. If the input
 omits its ID, the input filename stem is used. `--output` still supports an explicit
-JSON report path; the notes and TeX use the student folder. Each file is written
+JSON report path outside the student folder; the Markdown notes include the full JSON
+audit report, including retrieval traces and review issues. Each file is written
 atomically. Reusing a student folder replaces these derived files; multi-file writes
 are not transactional. The original input and answer are never overwritten.
+Existing artifacts with older names are retained; this naming change applies to new writes.
 
 The TeX copy appends red, escaped instructor annotations before `\end{document}`.
 For plain answers it creates a minimal TeX wrapper. It contains both assessors'
@@ -585,3 +593,49 @@ ordered fallback chain.
 Both require a schema-valid arithmetic answer of 14, and write privacy-safe attempt
 logs to `logs/provider-check.jsonl`. Passing checks connectivity and basic JSON/math
 behavior, not mathematical grading quality.
+
+For a plain chat connectivity check without a JSON response requirement, run:
+
+```sh
+uv run --env-file .env homework-ta-check-provider --prompt "hey there"
+uv run --env-file .env homework-ta-check-provider --provider gcat --prompt "hey there"
+```
+
+This accepts ordinary text while still rejecting empty, truncated, or incomplete
+responses. Grading requests continue to require their full JSON schemas.
+
+GCAT has a 32,768-token output budget: the homework probe exhausted 16,384 tokens
+with `finish_reason=length` before completing its JSON. A single complete JSON
+code fence is accepted and removed before validation. Partial JSON, extra prose,
+truncation, and schema violations still fail. Attempt logs now include safe
+response diagnostics and provider HTTP status for troubleshooting.
+
+## Compact checked homework
+
+The default student artifacts are `<student-number>_checked.tex` and
+`<student-number>_notes.md`. The professor note contains only one short overall
+summary, pending-review status, and up to four bottleneck questions. It no longer
+embeds the full grading audit or repeats the student's derivation.
+
+Red review blocks follow their corresponding answer sections/subsections. Exact
+student evidence quotes determine placement; ambiguous repeated excerpts use
+matching assessor location/title words, then the earliest source occurrence.
+Unlocatable criteria cause an actionable error instead of guessed placement.
+Each block has a short evaluation, a deterministic section score, and questions
+only where needed. All scores stay provisional while human review is pending.
+
+For complete TeX submissions, `--original-answer` is required:
+
+```sh
+uv run --env-file .env homework-ta data/qft1_hw1/work/403200498.json \
+  --original-answer data/qft1_hw1/submissions/403200498.tex \
+  --reference-db data/qft1_hw1/indexes/references.sqlite3 \
+  --output-dir outputs
+```
+
+The original file is read without newline conversion and checked against the
+assessed answer. The renderer inserts marked additions without replacing or
+removing any source characters. Removing those marked additions reproduces the
+original bytes exactly. An `xcolor` package declaration is added only to the
+checked copy when needed. Complete JSON audits may still be exported separately
+using `--output` outside the student artifact folder.

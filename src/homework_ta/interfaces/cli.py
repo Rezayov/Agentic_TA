@@ -16,6 +16,7 @@ from homework_ta.application.use_cases._structured import StructuredOutputError
 from homework_ta.application.use_cases.analyze_answer import AnalyzeAnswer
 from homework_ta.application.use_cases.build_evidence_packet import BuildEvidencePacket
 from homework_ta.application.use_cases.generate_feedback import GenerateFeedback
+from homework_ta.application.use_cases.generate_instructor_review import GenerateInstructorReview
 from homework_ta.application.use_cases.reconcile_assessments import ReconcileAssessments
 from homework_ta.application.use_cases.verify_assessment import VerifyAssessment
 from homework_ta.application.workflows.grade_submission import GradeSubmission
@@ -27,7 +28,12 @@ from homework_ta.infrastructure.llm.openai_compatible import (
 )
 from homework_ta.infrastructure.llm.router import LiteLLMRouter, RouterConfig
 from homework_ta.infrastructure.references.sqlite_fts import SQLiteReferenceRetriever
-from homework_ta.interfaces.report_artifacts import annotated_latex, student_folder, ta_notes
+from homework_ta.interfaces.report_artifacts import (
+    annotated_latex,
+    markdown_notes,
+    review_sections,
+    student_folder,
+)
 from homework_ta.observability import configure_logging, log_event
 
 MAX_INPUT_BYTES = 2_000_000
@@ -39,7 +45,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path, help="path to the grading input JSON")
     parser.add_argument(
-        "--output", type=Path, default=None, help="optional explicit JSON report path"
+        "--output",
+        type=Path,
+        default=None,
+        help="optional additional JSON report path outside the student artifact folder",
     )
     parser.add_argument(
         "--prompts-dir",
@@ -49,13 +58,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("outputs"),
-        help="root for per-student report, TA notes, and annotated TeX",
+        default=_default_output_dir(),
+        help="root for per-student artifacts (default: project outputs directory)",
     )
     parser.add_argument(
         "--router-config",
         type=Path,
         help="ordered LiteLLM failover JSONC (or HOMEWORK_TA_ROUTER_CONFIG)",
+    )
+    parser.add_argument(
+        "--original-answer",
+        type=Path,
+        help="original TeX file to preserve byte-for-byte in the checked copy",
     )
     parser.add_argument("--base-url", help="override HOMEWORK_TA_LLM_BASE_URL")
     parser.add_argument("--model", help="override HOMEWORK_TA_LLM_MODEL")
@@ -79,6 +93,13 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _default_output_dir() -> Path:
+    project_root = Path(__file__).resolve().parents[3]
+    if (project_root / "pyproject.toml").is_file():
+        return project_root / "outputs"
+    return Path.cwd() / "outputs"
+
+
 def _default_prompts_dir() -> Path:
     project_prompts = Path(__file__).resolve().parents[3] / "prompts"
     if project_prompts.is_dir():
@@ -94,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
         log_path = args.log_file.resolve()
         if input_path in {output_path, log_path} or output_path == log_path:
             raise ValueError("input, output, and log paths must all be different")
-        run_id = configure_logging(log_path)
+        run_id = configure_logging(log_path, console=True)
         log_event(
             LOGGER,
             logging.INFO,
@@ -152,28 +173,58 @@ def main(argv: list[str] | None = None) -> int:
             retriever = SQLiteReferenceRetriever(args.reference_db)
             evidence_builder = BuildEvidencePacket(retriever, max_results=args.retrieval_limit)
         workflow = GradeSubmission(
-            analyst=AnalyzeAnswer(llm, _read_prompt(prompts_dir / "analyst.md")),
+            analyst=AnalyzeAnswer(
+                llm,
+                _read_prompt(prompts_dir / "analyst.md")
+                + "\n\n"
+                + _read_prompt(prompts_dir / "assessment_citations.md"),
+            ),
             verifier=VerifyAssessment(
                 llm,
-                _read_verifier_prompt(prompts_dir),
+                _read_verifier_prompt(prompts_dir)
+                + "\n\n"
+                + _read_prompt(prompts_dir / "assessment_citations.md"),
             ),
             reconciler=ReconcileAssessments(settings.minimum_confidence),
             feedback_writer=GenerateFeedback(llm, _read_prompt(prompts_dir / "feedback_writer.md")),
             evidence_builder=evidence_builder,
         )
         folder = student_folder(args.output_dir.resolve(), grading_input.submission.submission_id)
-        output_path = output_path or folder / "grade-report.json"
-        notes_path = folder / "ta-notes.txt"
-        tex_path = folder / "annotated-answer.tex"
-        artifact_paths = {output_path, notes_path, tex_path}
-        if len(artifact_paths) != 3 or input_path in artifact_paths or log_path in artifact_paths:
+        notes_path = folder / f"{folder.name}_notes.md"
+        tex_path = folder / f"{folder.name}_checked.tex"
+        if output_path is not None and output_path.is_relative_to(folder):
+            raise ValueError("optional JSON report must be outside the student artifact folder")
+        artifact_paths = {notes_path, tex_path}
+        if output_path is not None:
+            artifact_paths.add(output_path)
+        if input_path in artifact_paths or log_path in artifact_paths:
             raise ValueError("input, log, report, and artifact paths must all be different")
+        original_answer = None
+        if args.original_answer is None and r"\begin{document}" in grading_input.submission.answer:
+            raise ValueError(
+                "use --original-answer for a full TeX submission to preserve exact bytes"
+            )
+        if args.original_answer is not None:
+            original_path = args.original_answer.resolve(strict=True)
+            if original_path in artifact_paths or original_path == log_path:
+                raise ValueError("derived outputs must not overwrite the original answer")
+            original_answer = _read_bounded(original_path, MAX_INPUT_BYTES).decode("utf-8")
+            if original_answer.strip() != grading_input.submission.answer:
+                raise ValueError("original answer does not match the assessed submission")
         report = workflow.execute(grading_input)
-        notes = ta_notes(report)
-        tex = annotated_latex(grading_input, report)
+        sections = review_sections(grading_input, report, original_answer)
+        log_event(LOGGER, logging.INFO, "instructor_review_started")
+        review = GenerateInstructorReview(
+            llm, _read_prompt(prompts_dir / "instructor_review.md")
+        ).execute(report, sections)
+        log_event(LOGGER, logging.INFO, "instructor_review_completed")
+        notes = markdown_notes(report, review)
+        tex = annotated_latex(grading_input, report, review, original_answer)
+        log_event(LOGGER, logging.INFO, "artifacts_write_started")
         _write_atomic(notes_path, notes)
         _write_atomic(tex_path, tex)
-        _write_atomic(output_path, report.model_dump_json(indent=2) + "\n")
+        if output_path is not None:
+            _write_atomic(output_path, report.model_dump_json(indent=2) + "\n")
         log_event(
             LOGGER,
             logging.INFO,
@@ -181,7 +232,7 @@ def main(argv: list[str] | None = None) -> int:
             submission_id=report.submission_id,
             status=report.reconciliation.status.value,
         )
-        print(f"Wrote {report.reconciliation.status.value} report to {output_path}")
+        print(f"Wrote {report.reconciliation.status.value} artifacts to {folder}", flush=True)
         return 0
     except (
         OSError,

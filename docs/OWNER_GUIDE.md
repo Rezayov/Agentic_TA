@@ -1,5 +1,7 @@
 # Owner's guide: how Homework TA works
 
+For current single-student and class-run commands, see the [User manual](USER_MANUAL.md).
+
 This guide is for understanding and maintaining your project. Start with the explanation below,
 then follow the code map when you want to change something. Use the [README](../README.md) for
 commands and provider settings, and the [skills/tools review](skills-and-tools.md) for additions.
@@ -416,7 +418,7 @@ For reproducibility, retain the assignment, original answer, reference files, ge
 provider/profile settings, prompt versions, report, and correlated log. Hashes show which content
 was used, but do not promise a language model will repeat its judgment on another run.
 
-## 15. Testing: what the 45 tests tell you
+## 15. Testing: what the 91 tests tell you
 
 The local suite substitutes fake model responses, so it can test behavior without paying for
 inference or relying on provider availability. SQLite integration tests create temporary indexes.

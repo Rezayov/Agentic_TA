@@ -13,7 +13,7 @@ class ChatMessage:
 @dataclass(frozen=True, slots=True)
 class LLMRequest:
     messages: tuple[ChatMessage, ...]
-    response_schema: dict[str, Any]
+    response_schema: dict[str, Any] | None
     schema_name: str
     temperature: float = 0.0
 

@@ -15,6 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
+homework-ta-batch = "homework_ta.interfaces.batch_cli:main"
 homework-ta-check-provider = "homework_ta.interfaces.provider_cli:main"
 homework-ta = "homework_ta.interfaces.cli:main"
 homework-ta-index = "homework_ta.interfaces.index_cli:main"

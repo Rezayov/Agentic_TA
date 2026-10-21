@@ -1,5 +1,6 @@
 """Deterministic score validation and conservative reconciliation."""
 
+import re
 from decimal import Decimal
 
 from homework_ta.domain.models import (
@@ -163,4 +164,12 @@ def _merge_evidence(
 
 
 def _normalize_quote(value: str) -> str:
-    return " ".join(value.split()).casefold()
+    """Normalize harmless formatting differences without changing math tokens."""
+    normalized = value.casefold()
+    # TeX permits whitespace around command arguments and delimiters. Remove it
+    # only in mathematical command syntax; ordinary word spacing remains intact.
+    normalized = re.sub(r"\\(frac|sqrt)\s*\{\s*", r"\\\1{", normalized)
+    normalized = re.sub(r"\s*\}\s*\{\s*", r"}{", normalized)
+    normalized = re.sub(r"\s*\}", "}", normalized)
+    normalized = re.sub(r"\s*\{\s*", "{", normalized)
+    return " ".join(normalized.split())

@@ -96,6 +96,27 @@ def test_validate_and_score_rejects_fabricated_quote() -> None:
         validate_and_score(fabricated, grading_input())
 
 
+@pytest.mark.parametrize(
+    ("source", "quote"),
+    [
+        (r"The result is \frac{1}{2}.", r"\frac{ 1 }{ 2 }"),
+        (r"The result is \sqrt{4}.", r"\sqrt { 4 }"),
+    ],
+)
+def test_validate_and_score_accepts_tex_whitespace_variants(source: str, quote: str) -> None:
+    data = grading_input().model_copy(
+        update={"submission": grading_input().submission.model_copy(update={"answer": source})}
+    )
+    item = assessment("analyst").criteria[0].model_copy(
+        update={"evidence": (Evidence(source_id="student_answer", location="answer", quote=quote,
+                                      explanation="A quoted mathematical expression."),)}
+    )
+    result = validate_and_score(
+        assessment("analyst").model_copy(update={"criteria": (item,)}), data
+    )
+    assert result.total_awarded_points == Decimal("2")
+
+
 def test_reconcile_auto_approves_exact_confident_agreement() -> None:
     data = grading_input()
     analyst = validate_and_score(assessment("analyst"), data)

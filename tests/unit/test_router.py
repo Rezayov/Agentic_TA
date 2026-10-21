@@ -134,7 +134,7 @@ def test_invalid_config(tmp_path, update):
 
 def test_example_config():
     loaded = RouterConfig.load(Path("config/router.jsonc"))
-    assert [r.name for r in loaded.providers] == ["gcat", "agentrouter", "dahl", "hormouz"]
+    assert [r.name for r in loaded.providers] == ["g-cat", "gcat", "agentrouter", "dahl", "hormouz"]
     assert loaded.providers[0].ordered_models == (
         "agy/gemini-3.8-flash-high",
         "cx/gpt-6-luna-medium",
@@ -211,7 +211,7 @@ def test_provider_check_uses_only_synthetic_data(monkeypatch, tmp_path):
         )
     )
     monkeypatch.setenv("FIRST", "secret")
-    monkeypatch.setattr(provider_cli, "configure_logging", lambda path: None)
+    monkeypatch.setattr(provider_cli, "configure_logging", lambda path, **kwargs: None)
     seen = []
 
     def completion(**kwargs):
@@ -309,3 +309,164 @@ def test_mixed_model_and_models_rejected(tmp_path):
     )
     with pytest.raises(ValueError, match="either"):
         RouterConfig.load(path)
+
+
+def test_plain_chat_accepts_text_and_omits_json_format(monkeypatch):
+    monkeypatch.setenv("FIRST", "secret")
+    router = LiteLLMRouter(config())
+    chat = LLMRequest((ChatMessage("user", "hey there"),), None, "plain_chat")
+    assert "response_format" not in router._parameters(config().providers[0], chat)
+    assert (
+        LiteLLMRouter._read_response(response("Hey there!"), config().providers[0], chat).content
+        == "Hey there!"
+    )
+
+
+def test_plain_chat_still_rejects_truncated_response():
+    chat = LLMRequest((ChatMessage("user", "hey there"),), None, "plain_chat")
+    with pytest.raises(ProviderError):
+        LiteLLMRouter._read_response(response("Hey", "length"), config().providers[0], chat)
+
+
+def test_schema_failure_diagnostics_do_not_include_response_content():
+    from homework_ta.infrastructure.llm.router import InvalidCompletionError
+
+    with pytest.raises(InvalidCompletionError) as error:
+        LiteLLMRouter._read_response(
+            response('{"answer":"PRIVATE RESPONSE"}'), config().providers[0], request()
+        )
+    assert error.value.details["reason"] == "schema_mismatch"
+    assert error.value.details["validator"] == "type"
+    assert error.value.details["path"] == ["answer"]
+    assert "PRIVATE RESPONSE" not in json.dumps(error.value.details)
+
+
+def test_incomplete_diagnostics_distinguish_token_limit():
+    from homework_ta.infrastructure.llm.router import InvalidCompletionError
+
+    with pytest.raises(InvalidCompletionError) as error:
+        LiteLLMRouter._read_response(
+            response('{"answer":14}', "length"), config().providers[0], request()
+        )
+    assert error.value.details["finish_reason"] == "length"
+
+
+@pytest.mark.parametrize("wrapper", ['```json\n{"answer":14}\n```', '```\n{"answer":14}\n```'])
+def test_complete_fenced_json_is_validated(wrapper):
+    result = LiteLLMRouter._read_response(response(wrapper), config().providers[0], request())
+    assert result.content == '{"answer":14}'
+
+
+@pytest.mark.parametrize(
+    "content,finish",
+    [
+        ('```json\n{"answer":14}\n```', "length"),
+        ('```json\n{"answer":14}', "stop"),
+        ('Here it is:\n```json\n{"answer":14}\n```', "stop"),
+        ('```json\n{"answer":"wrong"}\n```', "stop"),
+    ],
+)
+def test_fence_does_not_bypass_validation(content, finish):
+    with pytest.raises(ProviderError):
+        LiteLLMRouter._read_response(response(content, finish), config().providers[0], request())
+
+
+def test_router_emits_started_and_wait_events_before_completion(tmp_path, monkeypatch):
+    from threading import Event
+
+    import litellm
+
+    from homework_ta.infrastructure.llm import router as module
+    from homework_ta.observability import completion_progress, configure_logging
+
+    log = tmp_path / "progress.jsonl"
+    configure_logging(log)
+    monkeypatch.setenv("FIRST", "secret")
+    monkeypatch.delenv("SECOND", raising=False)
+    monkeypatch.setattr(
+        module,
+        "completion_progress",
+        lambda logger, **fields: completion_progress(logger, interval_seconds=0.01, **fields),
+    )
+
+    def complete(**kwargs):
+        Event().wait(0.04)
+        return response()
+
+    monkeypatch.setattr(litellm, "completion", complete)
+    LiteLLMRouter(config()).complete(request())
+    events = [json.loads(line)["event"] for line in log.read_text().splitlines()]
+    assert events[0] == "provider_request_started"
+    assert "provider_request_waiting" in events[1:-1]
+    assert events[-1] == "router_completion"
+
+
+@pytest.mark.parametrize("name", ["g-cat", "gcat_2", "provider-one"])
+def test_hyphenated_provider_names_are_supported(tmp_path, name):
+    path = tmp_path / "router.jsonc"
+    path.write_text(
+        json.dumps(
+            {
+                "providers": [
+                    {"name": name, "base_url": "https://example.org/v1", "models": ["test"]}
+                ]
+            }
+        )
+    )
+    assert RouterConfig.load(path).providers[0].name == name
+
+
+@pytest.mark.parametrize("name", ["../provider", "provider/name", "bad name", "a\nkey"])
+def test_unsafe_provider_names_are_rejected(tmp_path, name):
+    path = tmp_path / "router.jsonc"
+    path.write_text(
+        json.dumps(
+            {"providers": [{"name": name, "base_url": "https://example.org/v1", "model": "test"}]}
+        )
+    )
+    with pytest.raises(ValueError, match="provider name"):
+        RouterConfig.load(path)
+
+
+def test_schema_retry_receives_rule_feedback_without_rejected_content(monkeypatch):
+    import litellm
+
+    monkeypatch.setenv("FIRST", "secret")
+    seen = []
+
+    def complete(**kwargs):
+        seen.append(kwargs)
+        return response('{"answer":"PRIVATE BAD VALUE"}') if len(seen) == 1 else response()
+
+    monkeypatch.setattr(litellm, "completion", complete)
+    original = request()
+    result = LiteLLMRouter(config()).complete(original)
+    assert result.content == '{"answer":14}'
+    assert seen[1]["messages"][:-1] == seen[0]["messages"]
+    correction = seen[1]["messages"][-1]["content"]
+    assert '"validator": "type"' in correction
+    assert '"path": ["answer"]' in correction
+    assert "PRIVATE BAD VALUE" not in correction
+    assert len(original.messages) == 1
+
+
+def test_failed_model_feedback_is_not_shared_with_next_model(monkeypatch):
+    from dataclasses import replace
+
+    import litellm
+
+    monkeypatch.setenv("FIRST", "secret")
+    configured = config(2)
+    configured = replace(
+        configured, providers=(replace(configured.providers[0], models=("bad", "good")),)
+    )
+    seen = []
+
+    def complete(**kwargs):
+        seen.append(kwargs)
+        return response('{"answer":"bad"}') if kwargs["model"] == "openai/bad" else response()
+
+    monkeypatch.setattr(litellm, "completion", complete)
+    LiteLLMRouter(configured).complete(request())
+    assert len(seen[1]["messages"]) == 2
+    assert seen[2]["messages"] == seen[0]["messages"]

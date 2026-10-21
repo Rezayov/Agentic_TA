@@ -21,9 +21,11 @@ def main(argv: list[str] | None = None) -> int:
         default=Path(os.environ.get("HOMEWORK_TA_ROUTER_CONFIG", "config/router.jsonc")),
     )
     parser.add_argument("--provider", help="check only this configured provider")
+    parser.add_argument("--prompt", help="plain chat connectivity test (no JSON requirement)")
+    parser.add_argument("--log-file", type=Path, default=Path("logs/provider-check.jsonl"))
     args = parser.parse_args(argv)
     try:
-        configure_logging(Path("logs/provider-check.jsonl"))
+        configure_logging(args.log_file, console=True)
         config = RouterConfig.load(args.router_config)
         if args.provider:
             routes = tuple(route for route in config.providers if route.name == args.provider)
@@ -32,18 +34,26 @@ def main(argv: list[str] | None = None) -> int:
             config = replace(config, providers=routes)
         request = LLMRequest(
             messages=(
-                ChatMessage("user", _read_prompt(_default_prompts_dir() / "provider_smoke.md")),
+                ChatMessage(
+                    "user",
+                    args.prompt or _read_prompt(_default_prompts_dir() / "provider_smoke.md"),
+                ),
             ),
-            response_schema={
+            response_schema=None
+            if args.prompt is not None
+            else {
                 "type": "object",
                 "properties": {"answer": {"const": 14}},
                 "required": ["answer"],
                 "additionalProperties": False,
             },
-            schema_name="synthetic_arithmetic",
+            schema_name="plain_chat" if args.prompt is not None else "synthetic_arithmetic",
         )
         result = LiteLLMRouter(config).complete(request)
-        print(f"Provider check passed: {result.model}; arithmetic and JSON validated.")
+        if args.prompt is not None:
+            print(f"Provider check passed: {result.model}; reply: {result.content}")
+        else:
+            print(f"Provider check passed: {result.model}; arithmetic and JSON validated.")
         return 0
     except (OSError, ValueError, ProviderError) as exc:
         print(f"Provider check failed: {exc}", file=sys.stderr)

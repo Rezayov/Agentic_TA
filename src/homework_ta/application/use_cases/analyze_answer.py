@@ -1,6 +1,7 @@
 """Primary assessment use case."""
 
 from homework_ta.application.ports.llm import LanguageModel
+from homework_ta.application.use_cases._assessment_evidence import AssessmentEvidence
 from homework_ta.application.use_cases._structured import request_validated
 from homework_ta.domain.models import AnalystAssessment, GradingInput, ScoredAssessment
 from homework_ta.domain.scoring import validate_and_score
@@ -12,12 +13,14 @@ class AnalyzeAnswer:
         self._system_prompt = system_prompt
 
     def execute(self, grading_input: GradingInput) -> ScoredAssessment:
+        evidence = AssessmentEvidence(grading_input, AnalystAssessment)
         assessment = request_validated(
             self._llm,
             system_prompt=self._system_prompt,
-            data_json=grading_input.model_dump_json(),
+            data_json=evidence.data_json,
             result_type=AnalystAssessment,
             validate_result=lambda result: validate_and_score(result, grading_input),
-            response_schema=AnalystAssessment.schema_for_input(grading_input),
+            response_schema=evidence.schema,
+            decode_content=evidence.decode,
         )
         return validate_and_score(assessment, grading_input)

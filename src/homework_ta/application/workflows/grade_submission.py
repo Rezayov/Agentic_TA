@@ -66,6 +66,7 @@ class GradeSubmission:
         )
         feedback = None
         if reconciliation.status is ReconciliationStatus.AUTO_APPROVED:
+            log_event(LOGGER, logging.INFO, "feedback_started")
             feedback = self._feedback_writer.execute(reconciliation, grading_input)
             log_event(LOGGER, logging.INFO, "feedback_completed")
         else:

@@ -28,6 +28,7 @@ def request_validated[ResultT: BaseModel](
     validation_retries: int = 1,
     validate_result: Callable[[ResultT], object] | None = None,
     response_schema: dict[str, Any] | None = None,
+    decode_content: Callable[[str], str] | None = None,
 ) -> ResultT:
     """Request JSON and validate it locally; retry without trusting prior output."""
 
@@ -67,7 +68,8 @@ def request_validated[ResultT: BaseModel](
         )
         response = llm.complete(request)
         try:
-            result = result_type.model_validate_json(response.content)
+            content = decode_content(response.content) if decode_content else response.content
+            result = result_type.model_validate_json(content)
             if validate_result is not None:
                 validate_result(result)
             log_event(

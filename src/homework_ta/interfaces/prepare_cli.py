@@ -44,7 +44,7 @@ def main(argv: list[str] | None = None) -> int:
             answer=answer,
         )
         _write_atomic(output_path, grading_input.model_dump_json(indent=2) + "\n")
-        print(f"Prepared {submission_id} at {output_path}")
+        print(f"Prepared {submission_id} at {output_path}", flush=True)
         return 0
     except (OSError, UnicodeDecodeError, ValueError, ValidationError) as exc:
         print(f"error: {exc}", file=sys.stderr)
