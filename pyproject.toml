@@ -20,6 +20,7 @@ homework-ta-check-provider = "homework_ta.interfaces.provider_cli:main"
 homework-ta = "homework_ta.interfaces.cli:main"
 homework-ta-index = "homework_ta.interfaces.index_cli:main"
 homework-ta-prepare = "homework_ta.interfaces.prepare_cli:main"
+homework-ta-evaluate = "homework_ta.interfaces.evaluate_cli:main"
 
 [dependency-groups]
 dev = [
@@ -45,4 +46,3 @@ extend-exclude = ["agent-skills/latex-formatting"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
-

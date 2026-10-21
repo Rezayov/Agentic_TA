@@ -29,3 +29,12 @@ uv run --env-file .env homework-ta \
 
 Checked homework and professor notes go to the project `outputs/403200498/`.
 See the [user manual](../../docs/USER_MANUAL.md) for the all-student batch command.
+
+## Instructor-labeled evaluation
+
+`golden/scores.json` is the versioned location for anonymized criterion-level
+instructor labels and archived model predictions. It intentionally starts empty
+and unapproved: do not use unreconciled model/TA grades as ground truth. See
+[`golden/README.md`](golden/README.md) for the schema requirements and benchmark
+command. CI runs the deterministic tests; it does not call an LLM or claim
+accuracy until an instructor-approved dataset has been provided.
